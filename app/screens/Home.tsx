@@ -4,14 +4,19 @@ import styled from "styled-components/native";
 import Box from "../components/Box";
 import Header from "../components/Header";
 import Page from "../components/Page";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Room } from "../components/Room";
+import {
+  OrbitControls,
+  PerspectiveCamera,
+  softShadows,
+} from "@react-three/drei";
+import { useControls } from "leva";
+import Scene from "../components/Scene";
+
+softShadows();
 
 const StyledInput = styled(TextInput)`
-  border: 1px solid black;
-`;
-
-const StyledCanvas = styled(Canvas)`
   border: 1px solid black;
 `;
 
@@ -32,13 +37,9 @@ const Home = (props: Props) => {
           value={text}
         />
         {/* results */}
-        {/* <View></View> */}
-        <Canvas style={{ height: "100vh" }}>
-          <ambientLight />
-          <pointLight position={[10, 10, 10]} />
-          <Room />
+        <Canvas shadows style={{ height: "100vh" }}>
+          <Scene />
         </Canvas>
-        ,
       </Page>
     </>
   );

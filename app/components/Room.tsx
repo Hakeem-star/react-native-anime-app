@@ -1,28 +1,47 @@
 import React, { useRef } from "react";
+import { BackSide } from "three";
+import Wall from "./Wall";
 
-interface Props {}
-
-export const Room = (props: Props) => {
-  const floor = useRef<THREE.Mesh>(null!);
-  const wall = useRef<THREE.Mesh>(null!);
-
+export const Room = () => {
   return (
-    <group>
-      <mesh
-        visible
-        {...props}
-        scale={[2, 2, 2]}
-        rotation={[Math.PI * 0.5, 0, 0]}
-        position={[1, 0, 0]}
-        ref={floor}
-      >
-        <planeGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color={"red"} />
-      </mesh>
-      <mesh {...props} rotation={[0, 0, 0]} ref={wall}>
-        <planeGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color={"blue"} />
-      </mesh>
+    <group castShadow>
+      {/* Bottom */}
+
+      <Wall
+        receiveShadow
+        color={"red"}
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, -0.5, 0]}
+      />
+
+      {/* Back */}
+
+      <Wall
+        receiveShadow
+        color={"red"}
+        rotation={[0, 0, 0]}
+        position={[0, 0, -0.5]}
+      />
+
+      {/* Left */}
+
+      <Wall
+        receiveShadow
+        castShadow
+        color={"blue"}
+        rotation={[0, Math.PI / 2, 0]}
+        position={[-0.5, 0, 0]}
+      />
+
+      {/* Right */}
+
+      <Wall
+        color={"green"}
+        receiveShadow
+        castShadow
+        rotation={[0, -Math.PI / 2, 0]}
+        position={[0.5, 0, 0]}
+      />
     </group>
   );
 };
