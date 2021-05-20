@@ -1,12 +1,15 @@
+import { useLoader } from "@react-three/fiber";
 import React, { useRef } from "react";
 import { BackSide } from "three";
 import Wall from "./Wall";
+import { useGLTF } from "@react-three/drei";
+import TV from "./TV";
 
 export const Room = () => {
   return (
     <group castShadow>
       {/* Bottom */}
-
+      <TV />
       <Wall
         receiveShadow
         color={"red"}

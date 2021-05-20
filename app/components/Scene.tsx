@@ -1,7 +1,7 @@
 import { OrbitControls, PerspectiveCamera, useHelper } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useControls } from "leva";
-import React from "react";
+import React, { Suspense } from "react";
 import { View, Text } from "react-native";
 import THREE, { CameraHelper, DirectionalLightHelper } from "three";
 import { Room } from "./Room";
@@ -21,22 +21,17 @@ const Scene = (props: Props) => {
     })
   );
 
-  useFrame(() => {
-    window.addEventListener("mousemove", (event) => {
-      if (virtualCamera.current) {
-        virtualCamera.current.rotation.x +=
-          -(
-            (event.clientY - window.innerHeight / 2) /
-            (window.innerHeight / 2)
-          ) *
-            0.1 -
-          virtualCamera.current.rotation.x;
+  window.addEventListener("mousemove", (event) => {
+    if (virtualCamera.current) {
+      virtualCamera.current.rotation.x +=
+        -((event.clientY - window.innerHeight / 2) / (window.innerHeight / 2)) *
+          0.1 -
+        virtualCamera.current.rotation.x;
 
-        virtualCamera.current.rotation.y =
-          -((event.clientX - window.innerWidth / 2) / (window.innerWidth / 2)) *
-          0.7;
-      }
-    });
+      virtualCamera.current.rotation.y =
+        -((event.clientX - window.innerWidth / 2) / (window.innerWidth / 2)) *
+        0.7;
+    }
   });
 
   useHelper(directionalLightRef, DirectionalLightHelper, 1, "green");
