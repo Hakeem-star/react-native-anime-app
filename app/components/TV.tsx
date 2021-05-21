@@ -1,5 +1,5 @@
-import { useGLTF } from "@react-three/drei";
-import React from "react";
+import { meshBounds, useGLTF } from "@react-three/drei";
+import React, { useRef } from "react";
 import { View, Text } from "react-native";
 import { Mesh } from "three";
 import { Asset } from "expo-asset";
@@ -18,9 +18,21 @@ const TV = (props: Props) => {
     tvPosition: [0, -0.5, -0.41],
     tvRotation: { value: [0, 3.14, 0], step: Math.PI / 2 },
   }));
+  const ref = useRef(null!);
 
   return (
-    <group position={tvPosition} rotation={tvRotation}>
+    <group
+      ref={ref}
+      position={tvPosition}
+      rotation={tvRotation}
+      raycast={meshBounds}
+      onPointerOver={() => {}}
+      // onPointerOut={() => setHover(false)}
+      onClick={(e) => {
+        e.stopPropagation();
+        console.log("CLICKED GROUP");
+      }}
+    >
       <primitive
         scale={[0.2, 0.2, 0.2]}
         object={nodes.Scene}

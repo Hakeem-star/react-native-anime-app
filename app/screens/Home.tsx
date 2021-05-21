@@ -27,8 +27,8 @@ const Home = (props: Props) => {
 
   return (
     <>
-      <Header />
       <Page>
+        <Header />
         <Text>Search for Anime</Text>
         <StyledInput
           onChangeText={(text: string) => {
@@ -37,7 +37,7 @@ const Home = (props: Props) => {
           value={text}
         />
         {/* results */}
-        <Canvas shadows style={{ height: "100vh" }}>
+        <Canvas shadows style={{ height: "100%", width: "100vw", flex: 1 }}>
           <Scene />
         </Canvas>
       </Page>
