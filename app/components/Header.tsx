@@ -7,7 +7,7 @@ const StyledView = styled(View)`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: lightblue;
+  background-color: white;
   height: 40px;
 `;
 
@@ -15,13 +15,13 @@ const HeaderContent = styled(View)`
   width: 100%;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
   padding: 0 15px;
 `;
 
 const HeaderTextWrapper = styled(View)`
-  margin: 0 auto;
+  margin-left: 30px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -37,7 +37,7 @@ const Header = (props: Props) => {
       <HeaderContent>
         <HeaderSideNav />
         <HeaderTextWrapper>
-          <Text>Anime App</Text>
+          <Text style={{fontWeight:"500"}}>Anime App</Text>
         </HeaderTextWrapper>
       </HeaderContent>
     </StyledView>
