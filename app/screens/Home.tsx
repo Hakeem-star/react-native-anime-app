@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { View, Text, TextInput, TouchableHighlight } from "react-native";
 import styled from "styled-components/native";
 import Box from "../components/Box";
@@ -15,7 +15,9 @@ import { useControls } from "leva";
 import Scene from "../components/Scene";
 import SearchResults from "../components/SearchResults";
 import { createStackNavigator } from "@react-navigation/stack";
-
+import { useAnimesQuery } from "../generated/graphql";
+import { ANILIST_ENDPOINT } from "../constants/queryConfigs";
+import debounce from "lodash.debounce";
 const Stack = createStackNavigator();
 
 softShadows();
@@ -33,10 +35,36 @@ interface Props {}
 const Home = (props: Props) => {
   const [text, setText] = useState("");
   const [show3D, setShow3D] = useState(false);
+  const { data, refetch } = useAnimesQuery(
+    { name: text, page: 1 },
+    { enabled: false }
+  );
+
+  const debouncedRefetch = useMemo(
+    () =>
+      debounce(() => {
+        refetch();
+      }, 250),
+    [refetch]
+  );
+
+  useEffect(() => {
+    if (!!text) {
+      debouncedRefetch();
+    }
+  }, [text]);
+
   return (
     <Page>
       <Header />
-      <View style={{ marginTop: "15px" }}>
+      <View
+        style={{
+          marginTop: "15px",
+          maxHeight: "calc(100vh - 55px)",
+          height: "calc(100vh - 55px)",
+          overflow: "hidden",
+        }}
+      >
         <View style={{ paddingHorizontal: "20px" }}>
           <StyledInput
             onChangeText={(text: string) => {
@@ -99,12 +127,21 @@ const Home = (props: Props) => {
           </Canvas>
         ) : (
           <SearchResults
-          // results={results}
+            results={data?.Page?.media?.filter((media) => {
+              console.log(
+                media?.title?.romaji?.includes(text),
+                media?.title?.romaji,
+                text
+              );
+
+              // return media?.title?.romaji?.includes(text);
+              return true;
+            })}
           />
         )}
       </View>
     </Page>
   );
 };
-
+812;
 export default Home;

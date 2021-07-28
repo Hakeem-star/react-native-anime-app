@@ -1,0 +1,23 @@
+overwrite: true
+schema: "https://graphql.anilist.co/"
+documents: "hooks/gql/*.graphql"
+generates:
+  generated/graphql.ts:
+    plugins:
+      - add:
+          content: "import { ANILIST_ENDPOINT } from '../constants/queryConfigs';"
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-query"
+    config:
+      withHooks: true
+      fetcher:
+        endpoint: "ANILIST_ENDPOINT"
+        fetchParams:
+          headers:
+            Content-Type: "application/json"
+            Accept: "application/json"
+
+  introspection.json:
+    plugins:
+      - introspection

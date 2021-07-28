@@ -1,0 +1,15 @@
+fragment animeMedia on Media {
+  id
+  title {
+    english
+    romaji
+  }
+}
+
+query animes($page: Int, $name: String) {
+  Page(page: $page) {
+    media(type: ANIME, search: $name) {
+      ...animeMedia
+    }
+  }
+}
