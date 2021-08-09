@@ -10,6 +10,7 @@ import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 import Home from "./screens/Home";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,8 @@ export default function App() {
   } else {
     return (
       <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+
         <SafeAreaProvider>
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Home">

@@ -4527,6 +4527,11 @@ export type AnimeMediaFragment = (
   )> }
 );
 
+export type AnimeMediaPageInfoFragment = (
+  { __typename?: 'PageInfo' }
+  & Pick<PageInfo, 'total' | 'currentPage' | 'hasNextPage'>
+);
+
 export type AnimesQueryVariables = Exact<{
   page?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
@@ -4537,7 +4542,10 @@ export type AnimesQuery = (
   { __typename?: 'Query' }
   & { Page?: Maybe<(
     { __typename?: 'Page' }
-    & { media?: Maybe<Array<Maybe<(
+    & { pageInfo?: Maybe<(
+      { __typename?: 'PageInfo' }
+      & AnimeMediaPageInfoFragment
+    )>, media?: Maybe<Array<Maybe<(
       { __typename?: 'Media' }
       & AnimeMediaFragment
     )>>> }
@@ -4553,15 +4561,26 @@ export const AnimeMediaFragmentDoc = `
   }
 }
     `;
+export const AnimeMediaPageInfoFragmentDoc = `
+    fragment animeMediaPageInfo on PageInfo {
+  total
+  currentPage
+  hasNextPage
+}
+    `;
 export const AnimesDocument = `
     query animes($page: Int, $name: String) {
-  Page(page: $page) {
+  Page(page: $page, perPage: 13) {
+    pageInfo {
+      ...animeMediaPageInfo
+    }
     media(type: ANIME, search: $name) {
       ...animeMedia
     }
   }
 }
-    ${AnimeMediaFragmentDoc}`;
+    ${AnimeMediaPageInfoFragmentDoc}
+${AnimeMediaFragmentDoc}`;
 export const useAnimesQuery = <
       TData = AnimesQuery,
       TError = unknown
@@ -4574,3 +4593,8 @@ export const useAnimesQuery = <
       fetcher<AnimesQuery, AnimesQueryVariables>(AnimesDocument, variables),
       options
     );
+useAnimesQuery.document = AnimesDocument;
+
+useAnimesQuery.getKey = (variables?: AnimesQueryVariables) => ['animes', variables];
+
+export { fetcher }

@@ -6,8 +6,18 @@ fragment animeMedia on Media {
   }
 }
 
+fragment animeMediaPageInfo on PageInfo {
+  total
+  currentPage
+  hasNextPage
+}
+
 query animes($page: Int, $name: String) {
-  Page(page: $page) {
+  Page(page: $page, perPage: 13) {
+    pageInfo {
+      ...animeMediaPageInfo
+    }
+
     media(type: ANIME, search: $name) {
       ...animeMedia
     }

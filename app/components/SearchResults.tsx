@@ -1,7 +1,8 @@
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { View, Text, FlatList } from "react-native";
-import { AnimeMediaFragment } from "../generated/graphql";
+import { AnimeMediaFragment, AnimesQuery, Maybe } from "../generated/graphql";
 import styled from "styled-components/native";
+import { InfiniteQueryObserverResult } from "react-query";
 
 const StyledFlatList = styled(FlatList)`
   flex-shrink: 0;
@@ -25,9 +26,13 @@ const Wrapper = styled(View)`
 `;
 interface Props {
   results?: (AnimeMediaFragment | null)[];
+  fetchNextPage(): void | Promise<
+    InfiniteQueryObserverResult<AnimesQuery, Error>
+  >;
+  hasNextPage: boolean;
 }
 
-const SearchResults = ({ results }: Props) => {
+const SearchResults = ({ results, fetchNextPage, hasNextPage }: Props) => {
   const ref = useRef(null!);
   const ref2 = useRef(null!);
 
@@ -51,7 +56,7 @@ const SearchResults = ({ results }: Props) => {
     ) {
       const y = entities[0].boundingClientRect.y;
       console.log({ y, entities });
-
+      fetchNextPage();
       // if (state.prevY > y) {
       //   const lastPhoto = state.photos[state.photos.length - 1];
       //   const curPage = lastPhoto.albumId;
@@ -67,7 +72,6 @@ const SearchResults = ({ results }: Props) => {
       threshold: [0.1],
     };
     const obs = new IntersectionObserver(handleObserver, options);
-    console.log(ref.current);
 
     obs.observe(ref.current);
 

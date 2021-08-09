@@ -6,11 +6,16 @@ generates:
     plugins:
       - add:
           content: "import { ANILIST_ENDPOINT } from '../constants/queryConfigs';"
+      - add:
+          placement: append
+          content: "export { fetcher }"
       - "typescript"
       - "typescript-operations"
       - "typescript-react-query"
     config:
       withHooks: true
+      exposeQueryKeys: true
+      exposeDocument: true
       fetcher:
         endpoint: "ANILIST_ENDPOINT"
         fetchParams:
