@@ -1,8 +1,10 @@
 import React, { useEffect, useLayoutEffect, useRef } from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, Animated } from "react-native";
 import { AnimeMediaFragment, AnimesQuery, Maybe } from "../generated/graphql";
-import styled from "styled-components/native";
+import styled, { css } from "styled-components/native";
 import { InfiniteQueryObserverResult } from "react-query";
+import { keyframes } from "styled-components";
+import ScrollLoadingAnimation from "./ScrollLoadingAnimation";
 
 const StyledFlatList = styled(FlatList)`
   flex-shrink: 0;
@@ -22,7 +24,7 @@ const Wrapper = styled(View)`
   flex: 1;
   width: 100%;
   background-color: yellow;
-  overflow: auto;
+  /* overflow: auto; */
 `;
 interface Props {
   results?: (AnimeMediaFragment | null)[];
@@ -37,47 +39,41 @@ const SearchResults = ({ results, fetchNextPage, hasNextPage }: Props) => {
   const ref2 = useRef(null!);
 
   useLayoutEffect(() => {
-    function buildThresholdList() {
-      let thresholds = [];
-      let numSteps = 10;
-
-      for (let i = 1.0; i <= numSteps; i++) {
-        let ratio = i / numSteps;
-        thresholds.push(ratio);
-      }
-
-      thresholds.push(0);
-      return thresholds;
-    }
-
-    const handleObserver: IntersectionObserverCallback = function (
-      entities,
-      observer
-    ) {
-      const y = entities[0].boundingClientRect.y;
-      console.log({ y, entities });
-      fetchNextPage();
-      // if (state.prevY > y) {
-      //   const lastPhoto = state.photos[state.photos.length - 1];
-      //   const curPage = lastPhoto.albumId;
-      //   getPhotos(curPage);
-      //   setState({ page: curPage });
-      // }
-      // setState({ prevY: y });
-    };
-
-    const options = {
-      root: document.querySelector("#root"),
-      rootMargin: "0px",
-      threshold: [0.1],
-    };
-    const obs = new IntersectionObserver(handleObserver, options);
-
-    obs.observe(ref.current);
-
-    return () => {
-      obs.disconnect();
-    };
+    // function buildThresholdList() {
+    //   let thresholds = [];
+    //   let numSteps = 10;
+    //   for (let i = 1.0; i <= numSteps; i++) {
+    //     let ratio = i / numSteps;
+    //     thresholds.push(ratio);
+    //   }
+    //   thresholds.push(0);
+    //   return thresholds;
+    // }
+    // const handleObserver: IntersectionObserverCallback = function (
+    //   entities,
+    //   observer
+    // ) {
+    //   const y = entities[0].boundingClientRect.y;
+    //   console.log({ y, entities });
+    //   fetchNextPage();
+    //   // if (state.prevY > y) {
+    //   //   const lastPhoto = state.photos[state.photos.length - 1];
+    //   //   const curPage = lastPhoto.albumId;
+    //   //   getPhotos(curPage);
+    //   //   setState({ page: curPage });
+    //   // }
+    //   // setState({ prevY: y });
+    // };
+    // const options = {
+    //   root: document.querySelector("#root"),
+    //   rootMargin: "0px",
+    //   threshold: [0.1],
+    // };
+    // const obs = new IntersectionObserver(handleObserver, options);
+    // obs.observe(ref.current);
+    // return () => {
+    //   obs.disconnect();
+    // };
   }, []);
   return (
     <Wrapper ref={ref2}>
@@ -93,7 +89,9 @@ const SearchResults = ({ results, fetchNextPage, hasNextPage }: Props) => {
           );
         }}
       />
-      <StyledLoadingView ref={ref}></StyledLoadingView>
+      <StyledLoadingView ref={ref}>
+        <ScrollLoadingAnimation />
+      </StyledLoadingView>
     </Wrapper>
   );
 };

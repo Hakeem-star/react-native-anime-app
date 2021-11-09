@@ -8,9 +8,9 @@ const StyledView = styled(View)`
   align-items: stretch;
   flex-direction: column;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   margin: 0 auto;
-  background-color:white;
+  background-color: white;
 `;
 
 interface Props {}

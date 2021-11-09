@@ -4,14 +4,14 @@ import styled from "styled-components/native";
 import Box from "../components/Box";
 import Header from "../components/Header";
 import Page from "../components/Page";
-import { Canvas, useFrame } from "@react-three/fiber";
+// import { Canvas, useFrame } from "@react-three/fiber";
 import { Room } from "../components/Room";
-import {
-  OrbitControls,
-  PerspectiveCamera,
-  softShadows,
-} from "@react-three/drei";
-import { useControls } from "leva";
+// import {
+//   OrbitControls,
+//   PerspectiveCamera,
+//   softShadows,
+// } from "@react-three/drei";
+// import { useControls } from "leva";
 import Scene from "../components/Scene";
 import SearchResults from "../components/SearchResults";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -28,10 +28,9 @@ import { useInfiniteGraphQLQuery } from "../util/useInfiniteGraphQLQuery";
 import { useQueryClient } from "react-query";
 const Stack = createStackNavigator();
 
-softShadows();
+// softShadows();
 
 const StyledInput = styled(TextInput)`
-  border: 1px solid black;
   height: 50px;
   padding: 0 15px;
   border-radius: 3px;
@@ -92,7 +91,6 @@ const Home = (props: Props) => {
     return [
       ...acc,
       ...(current.Page?.media?.filter((media) => {
-        // return true;
         return (
           media?.title?.romaji?.toLowerCase()?.includes(text.toLowerCase()) ||
           media?.title?.english?.toLowerCase()?.includes(text.toLowerCase())
@@ -100,20 +98,19 @@ const Home = (props: Props) => {
       }) || []),
     ];
   }, [] as (AnimeMediaFragment | null)[]);
-  console.log({ result });
 
   return (
     <Page>
       <Header />
       <View
         style={{
-          marginTop: "15px",
-          maxHeight: "calc(100vh - 55px)",
-          height: "calc(100vh - 55px)",
+          marginTop: 15,
+          maxHeight: "100%",
+          height: "100%",
           overflow: "hidden",
         }}
       >
-        <View style={{ paddingHorizontal: "20px" }}>
+        <View>
           <StyledInput
             onChangeText={(text: string) => {
               setText(text);
@@ -129,8 +126,8 @@ const Home = (props: Props) => {
             flexDirection: "row",
             width: "100%",
             justifyContent: "space-around",
-            marginTop: "15px",
-            height: "50px",
+            marginTop: 15,
+            height: 50,
           }}
         >
           <TouchableHighlight
@@ -141,7 +138,7 @@ const Home = (props: Props) => {
             style={{
               width: "50%",
               height: "100%",
-              border: "1px solid #EEEEEE",
+              // border: "1px solid #EEEEEE",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -158,7 +155,7 @@ const Home = (props: Props) => {
             style={{
               width: "50%",
               height: "100%",
-              border: "1px solid #EEEEEE",
+              // border: "1px solid #EEEEEE",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -169,11 +166,11 @@ const Home = (props: Props) => {
           </TouchableHighlight>
         </View>
         {/* results */}
-        {show3D ? (
-          <Canvas shadows style={{ height: "100%", width: "100vw", flex: 1 }}>
-            {/* <Scene /> */}
-          </Canvas>
-        ) : (
+        {show3D ? null : (
+          // <View></View>
+          // <Canvas shadows style={{ height: "100%", width: "100vw", flex: 1 }}>
+          //   {/* <Scene /> */}
+          // </Canvas>
           <SearchResults
             fetchNextPage={() => {
               // if (hasNextPage) {
@@ -188,5 +185,5 @@ const Home = (props: Props) => {
     </Page>
   );
 };
-812;
+
 export default Home;

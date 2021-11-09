@@ -1,16 +1,15 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
-import Navigation from "./navigation";
 import Home from "./screens/Home";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
+import { SafeAreaView, StatusBar } from "react-native";
+import AppLoading from "expo-app-loading";
+// import { ReactQueryDevtools } from "react-query/devtools";
 
 const queryClient = new QueryClient();
 
@@ -18,16 +17,16 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
+  // const colorScheme = useColorScheme();
 
   if (!isLoadingComplete) {
-    return null;
+    return <AppLoading />;
   } else {
     return (
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
 
-        <SafeAreaProvider>
+        <SafeAreaView style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Home">
               <Stack.Screen
@@ -35,10 +34,9 @@ export default function App() {
                 component={Home}
                 options={{ headerShown: false }}
               />
-              {/* <Stack.Screen name="Details" component={Home} /> */}
             </Stack.Navigator>
           </NavigationContainer>
-        </SafeAreaProvider>
+        </SafeAreaView>
       </QueryClientProvider>
     );
   }
