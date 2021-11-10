@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import styled from "styled-components/native";
 import HeaderSideNav from "./HeaderSideNav";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const StyledView = styled(View)`
   display: flex;
@@ -35,10 +36,10 @@ const Header = (props: Props) => {
   return (
     <StyledView>
       <HeaderContent>
-        <HeaderSideNav />
-        <HeaderTextWrapper>
+        {/* <HeaderSideNav /> */}
+        {/* <HeaderTextWrapper>
           <Text style={{fontWeight:"500"}}>Anime App</Text>
-        </HeaderTextWrapper>
+        </HeaderTextWrapper> */}
       </HeaderContent>
     </StyledView>
   );
