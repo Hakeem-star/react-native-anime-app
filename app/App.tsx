@@ -13,7 +13,7 @@ import React from "react";
 
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
-import Home from "./screens/Home";
+import TwoDimensionHome from "./screens/TwoDimensionHome";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { SafeAreaView, StatusBar } from "react-native";
 import AppLoading from "expo-app-loading";
@@ -21,14 +21,19 @@ import Header from "./components/Header";
 import { Ionicons } from "@expo/vector-icons";
 // import { ReactQueryDevtools } from "react-query/devtools";
 import { StatusBar as StatusBarC } from "expo-status-bar";
+import DimensionSelector from "./screens/DimensionSelector";
 
 const queryClient = new QueryClient();
 
 type RootStackParamList = {
-  Home: { showSearchBar: boolean };
+  TwoDimensionHome: { showSearchBar: boolean };
+  "Dimension Selector": undefined;
 };
 
-export type RootStackProps = StackScreenProps<RootStackParamList, "Home">;
+export type RootStackProps = StackScreenProps<
+  RootStackParamList,
+  "TwoDimensionHome"
+>;
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -42,19 +47,24 @@ export default function App() {
     return (
       <QueryClientProvider client={queryClient}>
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-        <StatusBarC backgroundColor="red" />
+        {/* <StatusBarC backgroundColor="red" /> */}
         <SafeAreaView style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="Home">
+            <Stack.Navigator initialRouteName="Dimension Selector">
+              <Stack.Screen
+                name="Dimension Selector"
+                component={DimensionSelector}
+                options={{ headerShown: false }}
+              />
               <Stack.Screen
                 initialParams={{ showSearchBar: false }}
-                name="Home"
-                component={Home}
+                name="TwoDimensionHome"
+                component={TwoDimensionHome}
                 options={(props) => {
                   const { navigation: n, route } = props;
                   const navigation = n as StackNavigationProp<
                     RootStackParamList,
-                    "Home"
+                    "TwoDimensionHome"
                   >;
 
                   return {
