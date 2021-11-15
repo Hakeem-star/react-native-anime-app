@@ -15,6 +15,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import {
   AnimeMediaFragment,
   AnimesDocument,
+  CoverImageFragment,
   fetcher,
   Maybe,
   useAnimesQuery,
@@ -85,12 +86,13 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
       ...acc,
       ...(current.Page?.media?.filter((media) => {
         return (
-          media?.title?.romaji?.toLowerCase()?.includes(text.toLowerCase()) ||
-          media?.title?.english?.toLowerCase()?.includes(text.toLowerCase())
+          !!media &&
+          (media?.title?.romaji?.toLowerCase()?.includes(text.toLowerCase()) ||
+            media?.title?.english?.toLowerCase()?.includes(text.toLowerCase()))
         );
       }) || []),
     ];
-  }, [] as (AnimeMediaFragment | null)[]);
+  }, [] as ((AnimeMediaFragment & CoverImageFragment) | null)[]);
   console.log({ result });
 
   return (
@@ -106,7 +108,7 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
         {!!route?.params?.showSearchBar && (
           <View style={{ paddingHorizontal: 20 }}>
             <StyledInput
-              // autoFocus
+              autoFocus
               onChangeText={(text: string) => {
                 setText(text);
               }}
@@ -116,9 +118,17 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
             />
           </View>
         )}
+
         <FlatList
+          contentContainerStyle={{
+            display: "flex",
+            alignItems: "center",
+            padding: 20,
+          }}
           data={result}
           renderItem={(item) => <AnimeResult anime={item.item} />}
+          numColumns={2}
+          horizontal={false}
         />
       </View>
     </Page>

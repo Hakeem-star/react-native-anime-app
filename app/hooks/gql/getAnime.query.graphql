@@ -1,3 +1,9 @@
+fragment coverImage on Media {
+  coverImage {
+    medium
+    color
+  }
+}
 fragment animeMedia on Media {
   id
   title {
@@ -20,6 +26,7 @@ query animes($page: Int, $name: String) {
 
     media(type: ANIME, search: $name) {
       ...animeMedia
+      ...coverImage
     }
   }
 }

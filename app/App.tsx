@@ -70,7 +70,16 @@ export default function App() {
                   return {
                     headerRight: () => {
                       return (
-                        <Ionicons name="menu-sharp" size={24} color="black" />
+                        <Ionicons
+                          name="menu-sharp"
+                          size={24}
+                          color="black"
+                          onPress={() => {
+                            console.log("HKK");
+
+                            navigation.navigate("Dimension Selector");
+                          }}
+                        />
                       );
                     },
                     headerLeft: () => {
