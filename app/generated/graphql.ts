@@ -4616,7 +4616,7 @@ export type CoverImageFragment = (
   { __typename?: 'Media' }
   & { coverImage?: Maybe<(
     { __typename?: 'MediaCoverImage' }
-    & Pick<MediaCoverImage, 'medium' | 'color'>
+    & Pick<MediaCoverImage, 'large' | 'color'>
   )> }
 );
 
@@ -4658,7 +4658,7 @@ export type AnimesQuery = (
 export const CoverImageFragmentDoc = `
     fragment coverImage on Media {
   coverImage {
-    medium
+    large
     color
   }
 }

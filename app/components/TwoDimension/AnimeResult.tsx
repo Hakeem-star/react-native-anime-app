@@ -13,10 +13,10 @@ const AnimeResult = ({ anime }: Props) => {
   if (!anime) return null;
   return (
     <View style={styles.container}>
-      {!!anime.coverImage?.medium && (
+      {!!anime.coverImage?.large && (
         <ImageBackground
           style={styles.container}
-          source={{ uri: anime.coverImage?.medium }}
+          source={{ uri: anime.coverImage?.large }}
         />
       )}
       <View style={styles.titleContainer}>

@@ -103,10 +103,13 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
           maxHeight: "100%",
           height: "100%",
           overflow: "hidden",
+
+          display: "flex",
+          alignItems: "center",
         }}
       >
         {!!route?.params?.showSearchBar && (
-          <View style={{ paddingHorizontal: 20 }}>
+          <View style={{ paddingHorizontal: 20, width: "100%" }}>
             <StyledInput
               autoFocus
               onChangeText={(text: string) => {
@@ -120,10 +123,11 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
         )}
 
         <FlatList
+          style={{ marginTop: 20 }}
           contentContainerStyle={{
             display: "flex",
-            alignItems: "center",
-            padding: 20,
+            alignItems: "flex-start",
+            paddingBottom: 50,
           }}
           data={result}
           renderItem={(item) => <AnimeResult anime={item.item} />}

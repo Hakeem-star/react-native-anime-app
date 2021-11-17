@@ -1,6 +1,6 @@
 fragment coverImage on Media {
   coverImage {
-    medium
+    large
     color
   }
 }
