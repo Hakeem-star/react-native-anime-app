@@ -27,6 +27,8 @@ import { useQueryClient } from "react-query";
 import { ResultTabs } from "../navigation/ResultTabs";
 import { RootStackProps } from "../App";
 import AnimeResult from "../components/TwoDimension/AnimeResult";
+import { Gyroscope, ThreeAxisMeasurement } from "expo-sensors";
+
 const Stack = createStackNavigator();
 
 const StyledInput = styled(TextInput)`
@@ -41,7 +43,36 @@ interface Props {}
 const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
   const [text, setText] = useState("");
 
+  const [subscription, setSubscription] = useState<ReturnType<
+    typeof Gyroscope.addListener
+  > | null>(null);
+  const [gyroData, setGyroData] = useState<ThreeAxisMeasurement>({
+    x: 0,
+    y: 0,
+    z: 0,
+  });
+
   const queryClient = useQueryClient();
+
+  const _subscribe = () => {
+    setSubscription(
+      Gyroscope.addListener((gyroscopeData) => {
+        setGyroData(gyroscopeData);
+      })
+    );
+  };
+
+  const _unsubscribe = () => {
+    subscription && subscription.remove();
+    setSubscription(null);
+  };
+
+  useEffect(() => {
+    // Gyroscope.setUpdateInterval(300);
+
+    _subscribe();
+    return () => _unsubscribe();
+  }, []);
 
   const { fetchNextPage, hasNextPage, data, isLoading, refetch } =
     useInfiniteGraphQLQuery(
@@ -64,6 +95,7 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
         },
       }
     );
+  // console.log({ gyroData, isLoading });
 
   const debouncedRefetch = useMemo(
     () =>
@@ -81,19 +113,26 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
     }
   }, [text]);
 
-  const result = data?.pages?.reduce((acc, current) => {
-    return [
-      ...acc,
-      ...(current.Page?.media?.filter((media) => {
-        return (
-          !!media &&
-          (media?.title?.romaji?.toLowerCase()?.includes(text.toLowerCase()) ||
-            media?.title?.english?.toLowerCase()?.includes(text.toLowerCase()))
-        );
-      }) || []),
-    ];
-  }, [] as ((AnimeMediaFragment & CoverImageFragment) | null)[]);
-  console.log({ result });
+  const result = useMemo(
+    () =>
+      data?.pages?.reduce((acc, current) => {
+        return [
+          ...acc,
+          ...(current.Page?.media?.filter((media) => {
+            return (
+              !!media &&
+              (media?.title?.romaji
+                ?.toLowerCase()
+                ?.includes(text.toLowerCase()) ||
+                media?.title?.english
+                  ?.toLowerCase()
+                  ?.includes(text.toLowerCase()))
+            );
+          }) || []),
+        ];
+      }, [] as ((AnimeMediaFragment & CoverImageFragment) | null)[]),
+    [data]
+  );
 
   return (
     <Page>
@@ -130,7 +169,9 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
             paddingBottom: 50,
           }}
           data={result}
-          renderItem={(item) => <AnimeResult anime={item.item} />}
+          renderItem={(item) => (
+            <AnimeResult anime={item.item} rotation={gyroData} />
+          )}
           numColumns={2}
           horizontal={false}
         />
