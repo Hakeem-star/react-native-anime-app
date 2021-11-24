@@ -4629,6 +4629,24 @@ export type AnimeMediaFragment = (
   )> }
 );
 
+export type AnimeDetailsFragment = (
+  { __typename?: 'Media' }
+  & Pick<Media, 'id' | 'description' | 'bannerImage' | 'episodes'>
+  & { coverImage?: Maybe<(
+    { __typename?: 'MediaCoverImage' }
+    & Pick<MediaCoverImage, 'large' | 'color'>
+  )>, title?: Maybe<(
+    { __typename?: 'MediaTitle' }
+    & Pick<MediaTitle, 'romaji' | 'english' | 'native' | 'userPreferred'>
+  )>, startDate?: Maybe<(
+    { __typename?: 'FuzzyDate' }
+    & Pick<FuzzyDate, 'year' | 'month' | 'day'>
+  )>, endDate?: Maybe<(
+    { __typename?: 'FuzzyDate' }
+    & Pick<FuzzyDate, 'year' | 'month' | 'day'>
+  )> }
+);
+
 export type AnimeMediaPageInfoFragment = (
   { __typename?: 'PageInfo' }
   & Pick<PageInfo, 'total' | 'currentPage' | 'hasNextPage'>
@@ -4655,6 +4673,19 @@ export type AnimesQuery = (
   )> }
 );
 
+export type AnimeQueryVariables = Exact<{
+  id?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type AnimeQuery = (
+  { __typename?: 'Query' }
+  & { Media?: Maybe<(
+    { __typename?: 'Media' }
+    & AnimeDetailsFragment
+  )> }
+);
+
 export const CoverImageFragmentDoc = `
     fragment coverImage on Media {
   coverImage {
@@ -4669,6 +4700,34 @@ export const AnimeMediaFragmentDoc = `
   title {
     english
     romaji
+  }
+}
+    `;
+export const AnimeDetailsFragmentDoc = `
+    fragment animeDetails on Media {
+  id
+  description
+  coverImage {
+    large
+    color
+  }
+  bannerImage
+  title {
+    romaji
+    english
+    native
+    userPreferred
+  }
+  episodes
+  startDate {
+    year
+    month
+    day
+  }
+  endDate {
+    year
+    month
+    day
   }
 }
     `;
@@ -4709,5 +4768,28 @@ export const useAnimesQuery = <
 useAnimesQuery.document = AnimesDocument;
 
 useAnimesQuery.getKey = (variables?: AnimesQueryVariables) => ['animes', variables];
+
+export const AnimeDocument = `
+    query anime($id: Int) {
+  Media(id: $id) {
+    ...animeDetails
+  }
+}
+    ${AnimeDetailsFragmentDoc}`;
+export const useAnimeQuery = <
+      TData = AnimeQuery,
+      TError = unknown
+    >(
+      variables?: AnimeQueryVariables, 
+      options?: UseQueryOptions<AnimeQuery, TError, TData>
+    ) => 
+    useQuery<AnimeQuery, TError, TData>(
+      ['anime', variables],
+      fetcher<AnimeQuery, AnimeQueryVariables>(AnimeDocument, variables),
+      options
+    );
+useAnimeQuery.document = AnimeDocument;
+
+useAnimeQuery.getKey = (variables?: AnimeQueryVariables) => ['anime', variables];
 
 export { fetcher }

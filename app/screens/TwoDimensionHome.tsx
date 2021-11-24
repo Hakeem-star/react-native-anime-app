@@ -68,7 +68,7 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
   };
 
   useEffect(() => {
-    // Gyroscope.setUpdateInterval(300);
+    Gyroscope.setUpdateInterval(300);
 
     _subscribe();
     return () => _unsubscribe();
@@ -95,7 +95,6 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
         },
       }
     );
-  // console.log({ gyroData, isLoading });
 
   const debouncedRefetch = useMemo(
     () =>
@@ -162,6 +161,11 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
         )}
 
         <FlatList
+          onEndReached={() => {
+            queryClient.resetQueries("animes", { exact: true });
+
+            fetchNextPage();
+          }}
           style={{ marginTop: 20 }}
           contentContainerStyle={{
             display: "flex",

@@ -12,6 +12,33 @@ fragment animeMedia on Media {
   }
 }
 
+fragment animeDetails on Media {
+  id
+  description
+  coverImage {
+    large
+    color
+  }
+  bannerImage
+  title {
+    romaji
+    english
+    native
+    userPreferred
+  }
+  episodes
+  startDate {
+    year
+    month
+    day
+  }
+  endDate {
+    year
+    month
+    day
+  }
+}
+
 fragment animeMediaPageInfo on PageInfo {
   total
   currentPage
@@ -28,5 +55,11 @@ query animes($page: Int, $name: String) {
       ...animeMedia
       ...coverImage
     }
+  }
+}
+
+query anime($id: Int) {
+  Media(id: $id) {
+    ...animeDetails
   }
 }

@@ -22,17 +22,23 @@ import { Ionicons } from "@expo/vector-icons";
 // import { ReactQueryDevtools } from "react-query/devtools";
 import { StatusBar as StatusBarC } from "expo-status-bar";
 import DimensionSelector from "./screens/DimensionSelector";
+import AnimeDetails from "./screens/twoD/AnimeDetails";
 
 const queryClient = new QueryClient();
 
-type RootStackParamList = {
+export type RootStackParamList = {
   TwoDimensionHome: { showSearchBar: boolean };
   "Dimension Selector": undefined;
+  "Anime Details": { animID: number };
 };
 
 export type RootStackProps = StackScreenProps<
   RootStackParamList,
   "TwoDimensionHome"
+>;
+export type RootStackPropsDetails = StackScreenProps<
+  RootStackParamList,
+  "Anime Details"
 >;
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -102,6 +108,11 @@ export default function App() {
                     title: "Hakeems' Anime App",
                   };
                 }}
+              />
+              <Stack.Screen
+                name="Anime Details"
+                component={AnimeDetails}
+                options={{ headerShown: false }}
               />
             </Stack.Navigator>
           </NavigationContainer>

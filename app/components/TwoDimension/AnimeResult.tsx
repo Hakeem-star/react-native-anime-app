@@ -1,3 +1,8 @@
+import {
+  CompositeNavigationProp,
+  useNavigation,
+} from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { ThreeAxisMeasurement } from "expo-sensors";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -10,6 +15,11 @@ import {
   View,
 } from "react-native";
 import {
+  RootStackParamList,
+  RootStackProps,
+  RootStackPropsDetails,
+} from "../../App";
+import {
   AnimeMediaFragment,
   CoverImageFragment,
 } from "../../generated/graphql";
@@ -20,6 +30,9 @@ interface Props {
 }
 
 const AnimeResult = ({ anime, rotation }: Props) => {
+  const navigation =
+    useNavigation<StackNavigationProp<RootStackParamList, "Anime Details">>();
+
   const [prevItemRotation, setPrevItemRotation] =
     useState<ThreeAxisMeasurement>({
       x: 0,
@@ -87,7 +100,14 @@ const AnimeResult = ({ anime, rotation }: Props) => {
   });
 
   return (
-    <TouchableWithoutFeedback>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        if (anime?.id) {
+          console.log("OI");
+          navigation.navigate("Anime Details", { animID: anime?.id });
+        }
+      }}
+    >
       <Animated.View
         style={{
           ...styles.container,
