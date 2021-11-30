@@ -103,7 +103,6 @@ const AnimeResult = ({ anime, rotation }: Props) => {
     <TouchableWithoutFeedback
       onPress={() => {
         if (anime?.id) {
-          console.log("OI");
           navigation.navigate("Anime Details", { animID: anime?.id });
         }
       }}
