@@ -23,7 +23,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { StatusBar as StatusBarC } from "expo-status-bar";
 import DimensionSelector from "./screens/DimensionSelector";
 import AnimeDetails from "./screens/twoD/AnimeDetails";
+import { LogBox } from "react-native";
 
+LogBox.ignoreLogs(["Setting a timer"]);
 const queryClient = new QueryClient();
 
 export type RootStackParamList = {

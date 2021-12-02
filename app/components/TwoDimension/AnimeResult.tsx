@@ -27,88 +27,16 @@ import {
 interface Props {
   anime: (AnimeMediaFragment & CoverImageFragment) | null;
   rotation: ThreeAxisMeasurement;
+  styles:{
+    xInterpolate: Animated.AnimatedInterpolation;
+    yInterpolate: Animated.AnimatedInterpolation;
+    zInterpolate: Animated.AnimatedInterpolation;
+};
 }
 
-const AnimeResult = ({ anime, rotation }: Props) => {
+const AnimeResult = ({ anime, rotation,styles }: Props) => {
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, "Anime Details">>();
-
-  const [prevItemRotation, setPrevItemRotation] =
-    useState<ThreeAxisMeasurement>({
-      x: 0,
-      y: 0,
-      z: 0,
-    });
-
-  // const fadeAnim = useRef(new Animated.ValueXY()).current;
-  const x = useRef(new Animated.Value(0)).current;
-  const y = useRef(new Animated.Value(0)).current;
-  const z = useRef(new Animated.Value(0)).current;
-console.log({...rotation});
-
-  useEffect(() => {
-    if (rotation.y !== 0) {
-      // Animated.timing(x, {
-      //   toValue: rotation.x,
-      //   duration: Math.random() * 200,
-      //   useNativeDriver: false,
-      //   delay: Math.random() * 100,
-      // }).start();
-      Animated.spring(x, {
-        toValue: -rotation.x - (-rotation.y/2),
-        useNativeDriver: false,
-        delay: Math.random() * 50,
-        stiffness:18,
-        damping:1.5,
-        mass:1
-      }).start();
-
-      // Animated.timing(y, {
-      //   toValue: -rotation.y,
-      //   duration: Math.random() * 200,
-      //   useNativeDriver: false,
-      //   delay: Math.random() * 100,
-      // }).start();
-      Animated.spring(y, {
-        toValue: -rotation.y,
-        useNativeDriver: false,
-        delay: Math.random() * 300,
-        stiffness:18,
-        damping:1.5,
-        mass:1
-        
-        // restDisplacementThreshold:1
-      }).start();
-
-      Animated.spring(z, {
-        toValue: -rotation.z - (-rotation.y/2),
-        useNativeDriver: false,
-        delay: Math.random() * 100,
-        stiffness:18,
-        damping:1.5,
-        mass:1
-      }).start();
-    }
-  }, [rotation]);
-
-  const xInterpolate = x.interpolate({
-    inputRange: [-5, 0, 5],
-    outputRange: ["-50deg", "0deg", "50deg"],
-    // extrapolate:"clamp"
-
-  });
-
-  const yInterpolate = y.interpolate({
-    inputRange: [-5, 0, 5],
-    outputRange: ["-25deg", "0deg", "25deg"],
-    extrapolate:"clamp",
-
-  });
-  const zInterpolate = z.interpolate({
-    inputRange: [-10, 0, 10],
-    outputRange: ["-5deg", "0deg", "5deg"],
-    
-  });
 
   return (
     <TouchableWithoutFeedback
@@ -120,23 +48,23 @@ console.log({...rotation});
     >
       <Animated.View
         style={{
-          ...styles.container,
+          ...styless.container,
           transform: [
             { perspective: 1000 },
-            { rotateX: xInterpolate },
-            { rotateY: yInterpolate },
-            { rotateZ: zInterpolate },
+            { rotateX: styles.xInterpolate },
+            { rotateY:  styles.yInterpolate },
+            { rotateZ:  styles.zInterpolate },
           ],
         }}
       >
         {!!anime?.coverImage?.large && (
           <ImageBackground
-            style={styles.container}
+            style={styless.container}
             source={{ uri: anime.coverImage?.large }}
           />
         )}
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>
+        <View style={styless.titleContainer}>
+          <Text style={styless.title}>
             {anime?.title?.english || anime?.title?.romaji}
           </Text>
         </View>
@@ -147,7 +75,7 @@ console.log({...rotation});
 
 export default AnimeResult;
 
-const styles = StyleSheet.create({
+const styless = StyleSheet.create({
   container: {
     width: 180,
     height: 180,
