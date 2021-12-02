@@ -44,6 +44,7 @@ const AnimeResult = ({ anime, rotation }: Props) => {
   const x = useRef(new Animated.Value(0)).current;
   const y = useRef(new Animated.Value(0)).current;
   const z = useRef(new Animated.Value(0)).current;
+console.log({...rotation});
 
   useEffect(() => {
     if (rotation.y !== 0) {
@@ -54,11 +55,12 @@ const AnimeResult = ({ anime, rotation }: Props) => {
       //   delay: Math.random() * 100,
       // }).start();
       Animated.spring(x, {
-        toValue: -rotation.x,
+        toValue: -rotation.x - (-rotation.y/2),
         useNativeDriver: false,
         delay: Math.random() * 50,
-        bounciness: 16,
-        speed: 1,
+        stiffness:18,
+        damping:1.5,
+        mass:1
       }).start();
 
       // Animated.timing(y, {
@@ -70,33 +72,42 @@ const AnimeResult = ({ anime, rotation }: Props) => {
       Animated.spring(y, {
         toValue: -rotation.y,
         useNativeDriver: false,
-        delay: Math.random() * 50,
-        bounciness: 5,
-        speed: 0,
+        delay: Math.random() * 300,
+        stiffness:18,
+        damping:1.5,
+        mass:1
+        
+        // restDisplacementThreshold:1
       }).start();
 
       Animated.spring(z, {
-        toValue: -rotation.z,
+        toValue: -rotation.z - (-rotation.y/2),
         useNativeDriver: false,
-        delay: Math.random() * 50,
-        bounciness: 16,
-        speed: 1,
+        delay: Math.random() * 100,
+        stiffness:18,
+        damping:1.5,
+        mass:1
       }).start();
     }
   }, [rotation]);
 
   const xInterpolate = x.interpolate({
     inputRange: [-5, 0, 5],
-    outputRange: ["-10deg", "0deg", "10deg"],
+    outputRange: ["-50deg", "0deg", "50deg"],
+    // extrapolate:"clamp"
+
   });
 
   const yInterpolate = y.interpolate({
     inputRange: [-5, 0, 5],
-    outputRange: ["-10deg", "0deg", "10deg"],
+    outputRange: ["-25deg", "0deg", "25deg"],
+    extrapolate:"clamp",
+
   });
   const zInterpolate = z.interpolate({
     inputRange: [-10, 0, 10],
     outputRange: ["-5deg", "0deg", "5deg"],
+    
   });
 
   return (
@@ -111,6 +122,7 @@ const AnimeResult = ({ anime, rotation }: Props) => {
         style={{
           ...styles.container,
           transform: [
+            { perspective: 1000 },
             { rotateX: xInterpolate },
             { rotateY: yInterpolate },
             { rotateZ: zInterpolate },
@@ -139,7 +151,7 @@ const styles = StyleSheet.create({
   container: {
     width: 180,
     height: 180,
-    backgroundColor: "red",
+    backgroundColor: "transparent",
     margin: 4,
     borderRadius: 10,
     overflow: "hidden",

@@ -68,7 +68,7 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
   };
 
   useEffect(() => {
-    Gyroscope.setUpdateInterval(300);
+    Gyroscope.setUpdateInterval(500);
 
     _subscribe();
     return () => _unsubscribe();
@@ -173,9 +173,11 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
             paddingBottom: 50,
           }}
           data={result}
-          renderItem={(item) => (
-            <AnimeResult anime={item.item} rotation={gyroData} />
-          )}
+          renderItem={(item) =>
+            item.item ? (
+              <AnimeResult anime={item.item} rotation={gyroData} />
+            ) : null
+          }
           numColumns={2}
           horizontal={false}
         />
