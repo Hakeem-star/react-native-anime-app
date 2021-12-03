@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   View,
   Text,
@@ -6,6 +12,7 @@ import {
   TouchableHighlight,
   FlatList,
   Animated,
+  TouchableWithoutFeedback,
 } from "react-native";
 import styled from "styled-components/native";
 import Header from "../components/Header";
@@ -43,7 +50,7 @@ interface Props {}
 
 const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
   const [text, setText] = useState("");
-
+  const [offsetY, setOffsetY] = useState(0);
   const [subscription, setSubscription] = useState<ReturnType<
     typeof Gyroscope.addListener
   > | null>(null);
@@ -69,7 +76,7 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
   };
 
   useEffect(() => {
-    Gyroscope.setUpdateInterval(500);
+    Gyroscope.setUpdateInterval(300);
 
     _subscribe();
     return () => _unsubscribe();
@@ -134,61 +141,6 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
     [data]
   );
 
-  //extract to hook TODO
-  const x = useRef(new Animated.Value(0)).current;
-  const y = useRef(new Animated.Value(0)).current;
-  const z = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (gyroData.y !== 0) {
-      Animated.spring(x, {
-        toValue: -gyroData.x,
-        useNativeDriver: false,
-        //  delay: Math.random() * 50,
-        stiffness: 18,
-        damping: 2,
-        mass: 1,
-      }).start();
-
-      Animated.spring(y, {
-        toValue: -gyroData.y,
-        useNativeDriver: false,
-        //  delay: Math.random() * 300,
-        stiffness: 100,
-        damping: 2,
-        mass: 1,
-      }).start();
-
-      Animated.spring(z, {
-        toValue: -gyroData.z,
-        useNativeDriver: false,
-        //  delay: Math.random() * 100,
-        stiffness: 18,
-        damping: 2,
-        mass: 1,
-      }).start();
-    }
-  }, [gyroData]);
-
-  const xInterpolate = x.interpolate({
-    inputRange: [-5, 0, 5],
-    outputRange: ["-10deg", "0deg", "10deg"],
-    extrapolate: "extend",
-  });
-
-  const yInterpolate = y.interpolate({
-    inputRange: [-5, 0, 5],
-    outputRange: ["-10deg", "0deg", "10deg"],
-    extrapolate: "extend",
-  });
-  const zInterpolate = z.interpolate({
-    inputRange: [-10, 0, 10],
-    outputRange: ["-5deg", "0deg", "5deg"],
-    extrapolate: "extend",
-  });
-
-  const vals = { xInterpolate, yInterpolate, zInterpolate };
-
   return (
     <Page>
       <View
@@ -229,15 +181,11 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
             paddingBottom: 50,
           }}
           data={result}
-          renderItem={(item) =>
-            item.item ? (
-              <AnimeResult
-                styles={vals}
-                anime={item.item}
-                rotation={gyroData}
-              />
-            ) : null
-          }
+          renderItem={(item) => {
+            return item.item ? (
+              <AnimeResult anime={item.item} rotation={gyroData} />
+            ) : null;
+          }}
           numColumns={2}
           horizontal={false}
         />

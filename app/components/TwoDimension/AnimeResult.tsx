@@ -27,16 +27,83 @@ import {
 interface Props {
   anime: (AnimeMediaFragment & CoverImageFragment) | null;
   rotation: ThreeAxisMeasurement;
-  styles:{
+  styles?: {
     xInterpolate: Animated.AnimatedInterpolation;
     yInterpolate: Animated.AnimatedInterpolation;
     zInterpolate: Animated.AnimatedInterpolation;
-};
+  };
 }
 
-const AnimeResult = ({ anime, rotation,styles }: Props) => {
+const AnimeResult = ({ anime, rotation, styles }: Props) => {
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, "Anime Details">>();
+  const ref = useRef<View>(null);
+  const [animate, setAnimate] = useState<boolean>(true);
+  console.log(animate);
+
+  useEffect(() => {
+    if (ref.current)
+      ref.current?.measure((x, y, width, height, pageX, pageY) => {
+        setAnimate(!!pageY);
+        // return console.log({ x, y, width, height, pageX, pageY });
+      });
+  });
+  useEffect(() => {
+    return () => setAnimate(false);
+  }, []);
+
+  //extract to hook TODO
+  const x = useRef(new Animated.Value(0)).current;
+  const y = useRef(new Animated.Value(0)).current;
+  const z = useRef(new Animated.Value(0)).current;
+
+  const count = useRef(0);
+  useEffect(() => {
+    if (rotation.y !== 0) {
+      // Animated.spring(x, {
+      //   toValue: -rotation.x,
+      //   useNativeDriver: true,
+      //   delay: Math.random() * 50,
+      //   stiffness: 18,
+      //   damping: 2,
+      //   mass: 1,
+      // }).start();
+      Animated.spring(y, {
+        useNativeDriver: true,
+        toValue: -rotation.y + Math.random() * 0.3,
+        delay: Math.random() * 0.3,
+        stiffness: 200,
+        damping: 0.21,
+        mass: 0.6,
+      }).start();
+      // Animated.spring(z, {
+      //   toValue: -rotation.z,
+      //   useNativeDriver: true,
+      //   delay: Math.random() * 10,
+      //   stiffness: 18,
+      //   damping: 2,
+      //   mass: 1,
+      // }).start();
+    }
+    count.current++;
+  }, [rotation]);
+
+  const xInterpolate = x.interpolate({
+    inputRange: [-5, 0, 5],
+    outputRange: ["-10deg", "0deg", "10deg"],
+    extrapolate: "extend",
+  });
+
+  const yInterpolate = y.interpolate({
+    inputRange: [-5, 0, 5],
+    outputRange: ["-5deg", "0deg", "5deg"],
+    extrapolate: "extend",
+  });
+  const zInterpolate = z.interpolate({
+    inputRange: [-10, 0, 10],
+    outputRange: ["-5deg", "0deg", "5deg"],
+    extrapolate: "extend",
+  });
 
   return (
     <TouchableWithoutFeedback
@@ -47,14 +114,17 @@ const AnimeResult = ({ anime, rotation,styles }: Props) => {
       }}
     >
       <Animated.View
+        ref={ref}
         style={{
           ...styless.container,
-          transform: [
-            { perspective: 1000 },
-            { rotateX: styles.xInterpolate },
-            { rotateY:  styles.yInterpolate },
-            { rotateZ:  styles.zInterpolate },
-          ],
+          transform: animate
+            ? [
+                { perspective: 350 },
+                { rotateX: xInterpolate },
+                { rotateY: yInterpolate },
+                { rotateZ: zInterpolate },
+              ]
+            : [],
         }}
       >
         {!!anime?.coverImage?.large && (
