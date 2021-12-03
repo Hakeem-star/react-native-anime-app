@@ -27,65 +27,53 @@ import {
 interface Props {
   anime: (AnimeMediaFragment & CoverImageFragment) | null;
   rotation: ThreeAxisMeasurement;
-  styles?: {
-    xInterpolate: Animated.AnimatedInterpolation;
-    yInterpolate: Animated.AnimatedInterpolation;
-    zInterpolate: Animated.AnimatedInterpolation;
-  };
 }
 
-const AnimeResult = ({ anime, rotation, styles }: Props) => {
+// Add tilt when scrolling up or down - TODO
+
+const AnimeResult = ({ anime, rotation }: Props): JSX.Element => {
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, "Anime Details">>();
   const ref = useRef<View>(null);
-  const [animate, setAnimate] = useState<boolean>(true);
-  console.log(animate);
 
-  useEffect(() => {
-    if (ref.current)
-      ref.current?.measure((x, y, width, height, pageX, pageY) => {
-        setAnimate(!!pageY);
-        // return console.log({ x, y, width, height, pageX, pageY });
-      });
-  });
-  useEffect(() => {
-    return () => setAnimate(false);
-  }, []);
-
-  //extract to hook TODO
   const x = useRef(new Animated.Value(0)).current;
   const y = useRef(new Animated.Value(0)).current;
   const z = useRef(new Animated.Value(0)).current;
 
-  const count = useRef(0);
+  const prevValues = useRef({ x: 0, y: 0, z: 0 });
+
   useEffect(() => {
-    if (rotation.y !== 0) {
-      // Animated.spring(x, {
-      //   toValue: -rotation.x,
-      //   useNativeDriver: true,
-      //   delay: Math.random() * 50,
-      //   stiffness: 18,
-      //   damping: 2,
-      //   mass: 1,
-      // }).start();
-      Animated.spring(y, {
-        useNativeDriver: true,
-        toValue: -rotation.y + Math.random() * 0.3,
-        delay: Math.random() * 0.3,
-        stiffness: 200,
-        damping: 0.21,
-        mass: 0.6,
-      }).start();
-      // Animated.spring(z, {
-      //   toValue: -rotation.z,
-      //   useNativeDriver: true,
-      //   delay: Math.random() * 10,
-      //   stiffness: 18,
-      //   damping: 2,
-      //   mass: 1,
-      // }).start();
-    }
-    count.current++;
+    if (ref.current)
+      ref.current?.measure((_x, _y, width, height, pageX, pageY) => {
+        if (pageY) {
+          if (prevValues.current.y !== 0 && rotation.y < 0.001) {
+            Animated.spring(x, {
+              toValue: -prevValues.current.x,
+              useNativeDriver: true,
+              stiffness: 8,
+              damping: 2,
+              mass: 0.6,
+            }).start();
+            Animated.spring(y, {
+              useNativeDriver: true,
+              toValue: -prevValues.current.y + Math.random() * 0.3,
+              // delay: Math.random() * 0.3,
+              stiffness: 8,
+              damping: 0.21,
+              mass: 0.6,
+            }).start();
+            Animated.spring(z, {
+              toValue: -prevValues.current.z,
+              useNativeDriver: true,
+              stiffness: 8,
+              damping: 2,
+              mass: 0.6,
+            }).start();
+          }
+        }
+      });
+
+    prevValues.current = rotation;
   }, [rotation]);
 
   const xInterpolate = x.interpolate({
@@ -116,25 +104,23 @@ const AnimeResult = ({ anime, rotation, styles }: Props) => {
       <Animated.View
         ref={ref}
         style={{
-          ...styless.container,
-          transform: animate
-            ? [
-                { perspective: 350 },
-                { rotateX: xInterpolate },
-                { rotateY: yInterpolate },
-                { rotateZ: zInterpolate },
-              ]
-            : [],
+          ...styles.container,
+          transform: [
+            { perspective: 350 },
+            { rotateX: xInterpolate },
+            { rotateY: yInterpolate },
+            { rotateZ: zInterpolate },
+          ],
         }}
       >
         {!!anime?.coverImage?.large && (
           <ImageBackground
-            style={styless.container}
+            style={styles.container}
             source={{ uri: anime.coverImage?.large }}
           />
         )}
-        <View style={styless.titleContainer}>
-          <Text style={styless.title}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>
             {anime?.title?.english || anime?.title?.romaji}
           </Text>
         </View>
@@ -145,7 +131,7 @@ const AnimeResult = ({ anime, rotation, styles }: Props) => {
 
 export default AnimeResult;
 
-const styless = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     width: 180,
     height: 180,

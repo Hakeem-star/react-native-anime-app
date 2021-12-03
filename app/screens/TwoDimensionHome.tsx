@@ -65,7 +65,10 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
   const _subscribe = () => {
     setSubscription(
       Gyroscope.addListener((gyroscopeData) => {
-        setGyroData(gyroscopeData);
+        const data = { ...gyroscopeData };
+        if (data.y < 0.001 && data.y > -0.001) {
+          setGyroData({ ...gyroscopeData, y: 0 });
+        } else setGyroData(gyroscopeData);
       })
     );
   };
@@ -80,7 +83,7 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
 
     _subscribe();
     return () => _unsubscribe();
-  }, []);
+  }, [setGyroData]);
 
   const { fetchNextPage, hasNextPage, data, isLoading, refetch } =
     useInfiniteGraphQLQuery(
