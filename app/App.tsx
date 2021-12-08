@@ -56,7 +56,12 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         {/* <StatusBarC backgroundColor="red" /> */}
-        <SafeAreaView style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
+        <SafeAreaView
+          style={{
+            flex: 1,
+            marginTop: StatusBar.currentHeight,
+          }}
+        >
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Dimension Selector">
               <Stack.Screen

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,9 @@ import {
   Button,
   TouchableHighlight,
   TouchableOpacity,
+  Animated,
+  Easing,
+  Image,
 } from "react-native";
 import { RootStackPropsDetails } from "../../App";
 import { useAnimeQuery } from "../../generated/graphql";
@@ -47,58 +50,128 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   const coverImage = anime.data?.Media?.coverImage?.large;
   const coverImageColor = anime.data?.Media?.coverImage?.color;
   const title = anime.data?.Media?.title;
+
+  const scale = useRef(new Animated.Value(0.8)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+  const imgRef = useRef<Image>(null);
+  const [imgSize, setImgSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    if (bannerImage || coverImage) {
+      Image.getSize(bannerImage || coverImage || "", (width, height) => {
+        if (width !== imgSize.width) setImgSize({ width, height });
+      });
+    }
+  }, [anime]);
+
+  useEffect(() => {
+    if (imgSize.height) {
+      Animated.timing(scale, {
+        toValue: 1.05,
+        useNativeDriver: true,
+        duration: 500,
+        delay: 200,
+      }).start();
+
+      Animated.timing(opacity, {
+        toValue: 1,
+        useNativeDriver: true,
+        duration: 500,
+        delay: 250,
+      }).start();
+    }
+  }, [imgSize]);
+
   return (
     <View>
-      <BackgroundImageWrapper>
+      <BackgroundImageWrapper
+        style={{
+          width: "100%",
+          maxHeight: 180,
+          height: 180,
+          // overflow: "hidden",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "white",
+        }}
+      >
         {(!!bannerImage || !!coverImage) && (
-          <ImageBackground
-            resizeMode="contain"
+          <Animated.View
             style={{
-              ...styles.container,
-              backgroundColor: coverImageColor || "",
+              backgroundColor: "white",
+              shadowColor: coverImageColor || "",
+              transform: [{ scale }, { translateY: 30 }],
+              opacity,
+              shadowOffset: {
+                width: 0,
+                height: 7,
+              },
+              shadowOpacity: 1,
+              shadowRadius: 9.11,
+              elevation: 14,
+              maxWidth: "100%",
             }}
-            source={{
-              uri:
-                anime.data?.Media?.bannerImage ||
-                anime.data?.Media?.coverImage?.large ||
-                "",
-            }}
-          />
-        )}
-        <BackIconWrapper
-          style={styles.wrapper}
-          activeOpacity={0.6}
-          onPress={() => {
-            navigation.navigate("TwoDimensionHome", {
-              showSearchBar: true,
-            });
-          }}
-        >
-          <InnerWrap>
-            <Ionicons
-              name="chevron-back-sharp"
-              size={30}
-              color="#ffffffc7"
-              style={styles.touch}
-              onPress={() => {
-                navigation.navigate("TwoDimensionHome", {
-                  showSearchBar: true,
-                });
+          >
+            <Image
+              ref={imgRef}
+              resizeMode="contain"
+              style={{
+                ...imgSize,
+                maxHeight: "100%",
+                maxWidth: "100%",
+              }}
+              source={{
+                uri:
+                  anime.data?.Media?.bannerImage ||
+                  anime.data?.Media?.coverImage?.large ||
+                  "",
               }}
             />
-            <Ionicons
-              name="chevron-back-sharp"
-              size={30}
-              color="#ffffffc7"
-              style={{ ...styles.touch, marginLeft: -20 }}
-            />
-          </InnerWrap>
-        </BackIconWrapper>
-
+          </Animated.View>
+        )}
+      </BackgroundImageWrapper>
+      <BackIconWrapper
+        style={{ ...styles.wrapper, shadowColor: coverImageColor || "" }}
+        activeOpacity={0.6}
+        onPress={() => {
+          navigation.navigate("TwoDimensionHome", {
+            showSearchBar: true,
+          });
+        }}
+      >
+        <InnerWrap>
+          <Ionicons
+            name="chevron-back-sharp"
+            size={30}
+            color="#ffffffc7"
+            style={styles.touch}
+            onPress={() => {
+              navigation.navigate("TwoDimensionHome", {
+                showSearchBar: true,
+              });
+            }}
+          />
+          <Ionicons
+            name="chevron-back-sharp"
+            size={30}
+            color="#ffffffc7"
+            style={{ ...styles.touch, marginLeft: -20 }}
+          />
+        </InnerWrap>
+      </BackIconWrapper>
+      <View
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
         <Text style={styles.title}>
           {title?.english || title?.romaji || title?.native}
         </Text>
-      </BackgroundImageWrapper>
+      </View>
     </View>
   );
 };
@@ -106,10 +179,10 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
 const styles = StyleSheet.create({
   buttonText: { color: "white" },
   title: {
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: "600",
     position: "absolute",
-    bottom: -8,
+    top: 34,
 
     textShadowColor: "rgba(255, 255, 255, 0.75)",
     textShadowOffset: { width: -1, height: 1 },
@@ -133,7 +206,6 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   wrapper: {
-    shadowColor: "red",
     shadowOffset: {
       width: 0,
       height: 7,
@@ -142,6 +214,7 @@ const styles = StyleSheet.create({
     shadowRadius: 9.11,
 
     elevation: 14,
+    marginTop: 20,
   },
 });
 

@@ -66,7 +66,7 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
     setSubscription(
       Gyroscope.addListener((gyroscopeData) => {
         const data = { ...gyroscopeData };
-        if (data.y < 0.001 && data.y > -0.001) {
+        if (data.y < 0.01 && data.y > -0.01) {
           setGyroData({ ...gyroscopeData, y: 0 });
         } else setGyroData(gyroscopeData);
       })
