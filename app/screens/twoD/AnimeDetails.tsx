@@ -15,6 +15,17 @@ import { RootStackPropsDetails } from "../../App";
 import { useAnimeQuery } from "../../generated/graphql";
 import styled from "styled-components";
 import { Ionicons } from "@expo/vector-icons";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+
+const Wrapper = styled(View)`
+  background-color: white;
+  flex: 1;
+`;
+
+const DetailsWrapper = styled(View)`
+  margin-top: 80px;
+  padding: 30px;
+`;
 
 const InnerWrap = styled(View)`
   width: 30px;
@@ -40,8 +51,10 @@ const BackIconWrapper = styled(TouchableOpacity)`
 const BackgroundImageWrapper = styled(View)`
   position: relative;
 `;
+const Test = () => <View></View>;
 
 interface Props {}
+const Tabs = createMaterialTopTabNavigator();
 
 const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   const anime = useAnimeQuery({ id: route.params.animID });
@@ -50,9 +63,9 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   const coverImage = anime.data?.Media?.coverImage?.large;
   const coverImageColor = anime.data?.Media?.coverImage?.color;
   const title = anime.data?.Media?.title;
-
+  const description = anime.data?.Media?.description;
   const scale = useRef(new Animated.Value(0.8)).current;
-  const opacity = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(0.5)).current;
   const imgRef = useRef<Image>(null);
   const [imgSize, setImgSize] = useState({ width: 0, height: 0 });
 
@@ -83,13 +96,12 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   }, [imgSize]);
 
   return (
-    <View>
+    <Wrapper>
       <BackgroundImageWrapper
         style={{
           width: "100%",
           maxHeight: 180,
           height: 180,
-          // overflow: "hidden",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -172,7 +184,15 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
           {title?.english || title?.romaji || title?.native}
         </Text>
       </View>
-    </View>
+      <DetailsWrapper>
+        <Text>{description}</Text>
+        <View>
+          <Tabs.Navigator initialRouteName="Anime Details">
+            <Tabs.Screen name="Test" component={() => <Test />}></Tabs.Screen>
+          </Tabs.Navigator>
+        </View>
+      </DetailsWrapper>
+    </Wrapper>
   );
 };
 
@@ -210,7 +230,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 7,
     },
-    shadowOpacity: 1,
+    shadowOpacity: 0,
     shadowRadius: 9.11,
 
     elevation: 14,

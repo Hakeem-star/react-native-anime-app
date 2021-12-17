@@ -20,6 +20,10 @@ fragment animeDetails on Media {
     color
   }
   bannerImage
+  tags {
+    name
+    description
+  }
   title {
     romaji
     english

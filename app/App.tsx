@@ -24,6 +24,7 @@ import { StatusBar as StatusBarC } from "expo-status-bar";
 import DimensionSelector from "./screens/DimensionSelector";
 import AnimeDetails from "./screens/twoD/AnimeDetails";
 import { LogBox } from "react-native";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 const queryClient = new QueryClient();
@@ -44,7 +45,6 @@ export type RootStackPropsDetails = StackScreenProps<
 >;
 
 const Stack = createStackNavigator<RootStackParamList>();
-
 export default function App() {
   const isLoadingComplete = useCachedResources();
   // const colorScheme = useColorScheme();
