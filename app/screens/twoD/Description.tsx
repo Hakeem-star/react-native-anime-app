@@ -25,8 +25,15 @@ const Description = ({
         renderItem={(item) => <Text>{item.item?.name}</Text>}
         ListHeaderComponent={() => (
           <>
-            {!!totalEpisodes && <Text>Total episodes: {totalEpisodes}</Text>}
-            <Text>{getHTMLText(description)}</Text>
+            {!!totalEpisodes && totalEpisodes > 1 && (
+              <Text>Total episodes: {totalEpisodes}</Text>
+            )}
+            <Text>
+              {
+                // TODO - This description should ideally be split into an array of strings by BRs so we can properly sort out spacing
+                getHTMLText(description)
+              }
+            </Text>
           </>
         )}
       />

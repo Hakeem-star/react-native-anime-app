@@ -103,14 +103,13 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
         toValue: 1.05,
         useNativeDriver: true,
         duration: 500,
-        delay: 200,
       }).start();
 
       Animated.timing(opacity, {
         toValue: 1,
         useNativeDriver: true,
         duration: 500,
-        delay: 250,
+        delay: 100,
       }).start();
     }
   }, [imgSize]);

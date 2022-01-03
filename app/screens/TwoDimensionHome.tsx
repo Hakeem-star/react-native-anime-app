@@ -80,8 +80,8 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
 
   useEffect(() => {
     Gyroscope.setUpdateInterval(300);
-
-    _subscribe();
+    // TODO - This is causing slowdown when there are a lot of results
+    // _subscribe();
     return () => _unsubscribe();
   }, [setGyroData]);
 
