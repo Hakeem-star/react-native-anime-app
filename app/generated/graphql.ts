@@ -4646,7 +4646,10 @@ export type AnimeDetailsFragment = (
   )>>>, title?: Maybe<(
     { __typename?: 'MediaTitle' }
     & Pick<MediaTitle, 'romaji' | 'english' | 'native' | 'userPreferred'>
-  )>, startDate?: Maybe<(
+  )>, streamingEpisodes?: Maybe<Array<Maybe<(
+    { __typename?: 'MediaStreamingEpisode' }
+    & Pick<MediaStreamingEpisode, 'title' | 'thumbnail' | 'url' | 'site'>
+  )>>>, startDate?: Maybe<(
     { __typename?: 'FuzzyDate' }
     & Pick<FuzzyDate, 'year' | 'month' | 'day'>
   )>, endDate?: Maybe<(
@@ -4731,6 +4734,12 @@ export const AnimeDetailsFragmentDoc = `
     userPreferred
   }
   episodes
+  streamingEpisodes {
+    title
+    thumbnail
+    url
+    site
+  }
   startDate {
     year
     month

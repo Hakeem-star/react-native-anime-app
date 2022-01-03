@@ -31,6 +31,12 @@ fragment animeDetails on Media {
     userPreferred
   }
   episodes
+  streamingEpisodes {
+    title
+    thumbnail
+    url
+    site
+  }
   startDate {
     year
     month

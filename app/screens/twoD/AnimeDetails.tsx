@@ -15,17 +15,24 @@ import { RootStackPropsDetails } from "../../App";
 import { useAnimeQuery } from "../../generated/graphql";
 import styled from "styled-components";
 import { Ionicons } from "@expo/vector-icons";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabScreenProps,
+} from "@react-navigation/material-top-tabs";
+import Description from "./Description";
+import Episodes from "./Episodes";
 
 const Wrapper = styled(View)`
   background-color: white;
   flex: 1;
+  display: flex;
 `;
 
 const DetailsWrapper = styled(View)`
   margin-top: 80px;
-  padding: 30px;
+  padding: 15px;
   display: flex;
+  flex: 1;
 `;
 
 const InnerWrap = styled(View)`
@@ -52,14 +59,19 @@ const BackIconWrapper = styled(TouchableOpacity)`
 const BackgroundImageWrapper = styled(View)`
   position: relative;
 `;
-const Test = () => (
-  <View>
-    <Text>OMG</Text>
-  </View>
-);
 
 interface Props {}
-const Tabs = createMaterialTopTabNavigator();
+
+type TopNavParamList = {
+  Description: { description?: string | null };
+  Episodes: undefined;
+};
+export type TopNavPropsDetails = MaterialTopTabScreenProps<
+  TopNavParamList,
+  "Description"
+>;
+
+const Tabs = createMaterialTopTabNavigator<TopNavParamList>();
 
 const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   const anime = useAnimeQuery({ id: route.params.animID });
@@ -69,6 +81,9 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   const coverImageColor = anime.data?.Media?.coverImage?.color;
   const title = anime.data?.Media?.title;
   const description = anime.data?.Media?.description;
+  const tags = anime.data?.Media?.tags;
+  const episodes = anime.data?.Media?.episodes;
+  const streamingEpisodes = anime.data?.Media?.streamingEpisodes;
   const scale = useRef(new Animated.Value(0.8)).current;
   const opacity = useRef(new Animated.Value(0.5)).current;
   const imgRef = useRef<Image>(null);
@@ -99,6 +114,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
       }).start();
     }
   }, [imgSize]);
+  // console.log({ description });
 
   return (
     <Wrapper>
@@ -190,10 +206,25 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
         </Text>
       </View>
       <DetailsWrapper>
-        <Text>{description}</Text>
-        <View style={{ backgroundColor: "red", height: "100%" }}>
+        <View style={{ flex: 1 }}>
           <Tabs.Navigator>
-            <Tabs.Screen name="Test" component={Test} />
+            <Tabs.Screen
+              name="Description"
+              children={(props) => (
+                <Description
+                  description={description}
+                  totalEpisodes={episodes}
+                  tags={tags}
+                  {...props}
+                />
+              )}
+            />
+            <Tabs.Screen
+              name="Episodes"
+              children={(props) => (
+                <Episodes {...props} streamingEpisodes={streamingEpisodes} />
+              )}
+            />
           </Tabs.Navigator>
         </View>
       </DetailsWrapper>
