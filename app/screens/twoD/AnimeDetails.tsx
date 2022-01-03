@@ -25,6 +25,7 @@ const Wrapper = styled(View)`
 const DetailsWrapper = styled(View)`
   margin-top: 80px;
   padding: 30px;
+  display: flex;
 `;
 
 const InnerWrap = styled(View)`
@@ -51,7 +52,11 @@ const BackIconWrapper = styled(TouchableOpacity)`
 const BackgroundImageWrapper = styled(View)`
   position: relative;
 `;
-const Test = () => <View></View>;
+const Test = () => (
+  <View>
+    <Text>OMG</Text>
+  </View>
+);
 
 interface Props {}
 const Tabs = createMaterialTopTabNavigator();
@@ -186,9 +191,9 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
       </View>
       <DetailsWrapper>
         <Text>{description}</Text>
-        <View>
-          <Tabs.Navigator initialRouteName="Anime Details">
-            <Tabs.Screen name="Test" component={() => <Test />}></Tabs.Screen>
+        <View style={{ backgroundColor: "red", height: "100%" }}>
+          <Tabs.Navigator>
+            <Tabs.Screen name="Test" component={Test} />
           </Tabs.Navigator>
         </View>
       </DetailsWrapper>
