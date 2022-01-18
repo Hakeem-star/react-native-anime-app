@@ -47,8 +47,7 @@
     "react-native-web": "0.17.1",
     "react-query": "^3.19.1",
     "styled-components": "^5.2.1",
-    "stylelint-config-standard": "^22.0.0",
-    "three": "^0.128.0"
+    "stylelint-config-standard": "^22.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

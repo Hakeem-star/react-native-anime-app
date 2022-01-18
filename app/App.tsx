@@ -65,19 +65,9 @@ export default function App() {
           }}
         >
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="Dimension Selector">
+            <Stack.Navigator initialRouteName="TwoDimensionHome">
               <Stack.Screen
-                name="Dimension Selector"
-                component={DimensionSelector}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="ThreeDimensionHome"
-                component={ThreeDimensionHome}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                initialParams={{ showSearchBar: false }}
+                initialParams={{ showSearchBar: true }}
                 name="TwoDimensionHome"
                 component={TwoDimensionHome}
                 options={(props) => {
