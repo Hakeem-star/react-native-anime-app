@@ -18,7 +18,12 @@ const DimensionSelector = ({ navigation, route }: RootStackProps) => {
         {/* </View> */}
       </TouchableHighlight>
 
-      <TouchableHighlight style={styles.threeDimension}>
+      <TouchableHighlight
+        style={styles.threeDimension}
+        onPress={() => {
+          navigation.navigate("ThreeDimensionHome");
+        }}
+      >
         <Text style={styles.buttonText}>3D</Text>
       </TouchableHighlight>
     </View>

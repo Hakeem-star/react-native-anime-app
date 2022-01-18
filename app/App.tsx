@@ -25,6 +25,7 @@ import DimensionSelector from "./screens/DimensionSelector";
 import AnimeDetails from "./screens/twoD/AnimeDetails";
 import { LogBox } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import ThreeDimensionHome from "./screens/threeD/ThreeDimensionHome";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ export type RootStackParamList = {
   TwoDimensionHome: { showSearchBar: boolean };
   "Dimension Selector": undefined;
   "Anime Details": { animID: number };
+  ThreeDimensionHome: undefined;
 };
 
 export type RootStackProps = StackScreenProps<
@@ -70,6 +72,11 @@ export default function App() {
                 options={{ headerShown: false }}
               />
               <Stack.Screen
+                name="ThreeDimensionHome"
+                component={ThreeDimensionHome}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
                 initialParams={{ showSearchBar: false }}
                 name="TwoDimensionHome"
                 component={TwoDimensionHome}
@@ -88,8 +95,6 @@ export default function App() {
                           size={24}
                           color="black"
                           onPress={() => {
-                            console.log("HKK");
-
                             navigation.navigate("Dimension Selector");
                           }}
                         />
