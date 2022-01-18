@@ -17,6 +17,7 @@ import {
 import styled from "styled-components/native";
 import Header from "../components/Header";
 import Page from "../components/Page";
+import { MaterialIcons } from "@expo/vector-icons";
 
 import SearchResults from "../components/SearchResults";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -36,6 +37,7 @@ import { ResultTabs } from "../navigation/ResultTabs";
 import { RootStackProps } from "../App";
 import AnimeResult from "../components/TwoDimension/AnimeResult";
 import { Gyroscope, ThreeAxisMeasurement } from "expo-sensors";
+import SearchInput from "./SearchInput";
 
 const Stack = createStackNavigator();
 
@@ -152,23 +154,18 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
           maxHeight: "100%",
           height: "100%",
           overflow: "hidden",
-
           display: "flex",
           alignItems: "center",
         }}
       >
         {!!route?.params?.showSearchBar && (
-          <View style={{ paddingHorizontal: 20, width: "100%" }}>
-            <StyledInput
-              autoFocus
-              onChangeText={(text: string) => {
-                setText(text);
-              }}
-              value={text}
-              placeholder={"Search for Anime"}
-              placeholderTextColor={"#ADB2B6"}
-            />
-          </View>
+          <SearchInput
+            defaultText={text}
+            onChange={(value) => {
+              setText(value);
+            }}
+            placeholder={"Search for Anime"}
+          />
         )}
 
         <FlatList

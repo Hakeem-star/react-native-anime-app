@@ -85,7 +85,7 @@ export default function App() {
                           size={24}
                           color="black"
                           onPress={() => {
-                            navigation.navigate("Dimension Selector");
+                            // navigation.navigate("Dimension Selector");
                           }}
                         />
                       );
