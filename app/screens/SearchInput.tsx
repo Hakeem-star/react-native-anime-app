@@ -44,6 +44,8 @@ const SearchInput = ({ defaultText = "", onChange, placeholder }: Props) => {
             position: "absolute",
             right: 25,
             top: 8,
+            borderRadius: 50,
+            overflow: "hidden",
           }}
           activeOpacity={0.6}
           underlayColor={"transparent"}
@@ -52,8 +54,6 @@ const SearchInput = ({ defaultText = "", onChange, placeholder }: Props) => {
             style={{
               display: "flex",
               backgroundColor: "#0000001d",
-              overflow: "hidden",
-              borderRadius: 50,
               padding: 5,
               opacity: 0.5,
             }}

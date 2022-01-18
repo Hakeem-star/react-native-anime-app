@@ -81,18 +81,6 @@ export default function App() {
                     headerRight: () => {
                       return (
                         <Ionicons
-                          name="menu-sharp"
-                          size={24}
-                          color="black"
-                          onPress={() => {
-                            // navigation.navigate("Dimension Selector");
-                          }}
-                        />
-                      );
-                    },
-                    headerLeft: () => {
-                      return (
-                        <Ionicons
                           name="search-sharp"
                           size={24}
                           color="black"
@@ -100,6 +88,18 @@ export default function App() {
                             navigation.setParams({
                               showSearchBar: !route.params?.showSearchBar,
                             });
+                          }}
+                        />
+                      );
+                    },
+                    headerLeft: () => {
+                      return (
+                        <Ionicons
+                          name="menu-sharp"
+                          size={24}
+                          color="black"
+                          onPress={() => {
+                            // navigation.navigate("Dimension Selector");
                           }}
                         />
                       );

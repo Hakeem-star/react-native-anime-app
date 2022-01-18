@@ -39,6 +39,10 @@ import AnimeResult from "../components/TwoDimension/AnimeResult";
 import { Gyroscope, ThreeAxisMeasurement } from "expo-sensors";
 import SearchInput from "./SearchInput";
 
+const EmptyState = styled(View)`
+  margin-top: 50px;
+`;
+
 const Stack = createStackNavigator();
 
 const StyledInput = styled(TextInput)`
@@ -167,28 +171,33 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
             placeholder={"Search for Anime"}
           />
         )}
+        {result?.length ? (
+          <FlatList
+            onEndReached={() => {
+              queryClient.resetQueries("animes", { exact: true });
 
-        <FlatList
-          onEndReached={() => {
-            queryClient.resetQueries("animes", { exact: true });
-
-            fetchNextPage();
-          }}
-          style={{ marginTop: 20 }}
-          contentContainerStyle={{
-            display: "flex",
-            alignItems: "flex-start",
-            paddingBottom: 50,
-          }}
-          data={result}
-          renderItem={(item) => {
-            return item.item ? (
-              <AnimeResult anime={item.item} rotation={gyroData} />
-            ) : null;
-          }}
-          numColumns={2}
-          horizontal={false}
-        />
+              fetchNextPage();
+            }}
+            style={{ marginTop: 20 }}
+            contentContainerStyle={{
+              display: "flex",
+              alignItems: "flex-start",
+              paddingBottom: 50,
+            }}
+            data={result}
+            renderItem={(item) => {
+              return item.item ? (
+                <AnimeResult anime={item.item} rotation={gyroData} />
+              ) : null;
+            }}
+            numColumns={2}
+            horizontal={false}
+          />
+        ) : (
+          <EmptyState>
+            <Text>Nothing found</Text>
+          </EmptyState>
+        )}
       </View>
     </Page>
   );
