@@ -29,7 +29,7 @@ const Wrapper = styled(View)`
 `;
 
 const DetailsWrapper = styled(View)`
-  margin-top: 80px;
+  margin-top: 70px;
   padding: 15px;
   display: flex;
   flex: 1;
@@ -84,7 +84,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   const tags = anime.data?.Media?.tags;
   const episodes = anime.data?.Media?.episodes;
   const streamingEpisodes = anime.data?.Media?.streamingEpisodes;
-  const scale = useRef(new Animated.Value(0.8)).current;
+  const scale = useRef(new Animated.Value(1)).current;
   const opacity = useRef(new Animated.Value(0.5)).current;
   const imgRef = useRef<Image>(null);
   const [imgSize, setImgSize] = useState({ width: 0, height: 0 });
@@ -100,7 +100,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   useEffect(() => {
     if (imgSize.height) {
       Animated.timing(scale, {
-        toValue: 1.05,
+        toValue: 1.1,
         useNativeDriver: true,
         duration: 500,
       }).start();
@@ -132,15 +132,15 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
           <Animated.View
             style={{
               backgroundColor: "white",
-              shadowColor: coverImageColor || "",
               transform: [{ scale }, { translateY: 30 }],
-              opacity,
-              shadowOffset: {
-                width: 0,
-                height: 7,
-              },
-              shadowOpacity: 1,
-              shadowRadius: 9.11,
+              // shadowColor: coverImageColor || "",
+              // opacity,
+              // shadowOffset: {
+              //   width: 0,
+              //   height: 7,
+              // },
+              // shadowOpacity: 1,
+              // shadowRadius: 9.11,
               elevation: 14,
               maxWidth: "100%",
             }}
@@ -198,6 +198,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
+          marginTop: 30,
         }}
       >
         <Text style={styles.title}>
@@ -246,8 +247,6 @@ const styles = StyleSheet.create({
   touch: {
     alignItems: "center",
     justifyContent: "center",
-    // position: "absolute",
-    // left: 3,
   },
   container: {
     width: "100%",

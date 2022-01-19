@@ -1,39 +1,16 @@
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  FlatList,
-  Animated,
-  TouchableWithoutFeedback,
-} from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import { View, Text, FlatList } from "react-native";
 import styled from "styled-components/native";
-import Header from "../components/Header";
 import Page from "../components/Page";
-import { MaterialIcons } from "@expo/vector-icons";
 
-import SearchResults from "../components/SearchResults";
-import { createStackNavigator } from "@react-navigation/stack";
 import {
   AnimeMediaFragment,
-  AnimesDocument,
   CoverImageFragment,
-  fetcher,
-  Maybe,
   useAnimesQuery,
 } from "../generated/graphql";
-import { ANILIST_ENDPOINT } from "../constants/queryConfigs";
 import debounce from "lodash.debounce";
 import { useInfiniteGraphQLQuery } from "../util/useInfiniteGraphQLQuery";
 import { useQueryClient } from "react-query";
-import { ResultTabs } from "../navigation/ResultTabs";
 import { RootStackProps } from "../App";
 import AnimeResult from "../components/TwoDimension/AnimeResult";
 import { Gyroscope, ThreeAxisMeasurement } from "expo-sensors";
@@ -41,15 +18,6 @@ import SearchInput from "./SearchInput";
 
 const EmptyState = styled(View)`
   margin-top: 50px;
-`;
-
-const Stack = createStackNavigator();
-
-const StyledInput = styled(TextInput)`
-  height: 50px;
-  padding: 0 15px;
-  border-radius: 3px;
-  border: 1px solid #9fa5aa;
 `;
 
 interface Props {}
@@ -193,11 +161,12 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
             numColumns={2}
             horizontal={false}
           />
-        ) : (
+        ) : // We should only be showing this if we have stopped typing for a while
+        text ? (
           <EmptyState>
             <Text>Nothing found</Text>
           </EmptyState>
-        )}
+        ) : null}
       </View>
     </Page>
   );
