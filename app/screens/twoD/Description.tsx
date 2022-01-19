@@ -20,7 +20,7 @@ const Description = ({
   description,
   totalEpisodes,
   tags,
-  coverImageColor = "#20232a",
+  coverImageColor,
 }: TopNavPropsDetails & Props) => {
   const { width } = useWindowDimensions();
   // replace <br> with <div>
@@ -29,7 +29,9 @@ const Description = ({
   const [showAllTags, setShowAllTags] = useState(false);
 
   return (
-    <ScrollView style={{ backgroundColor: "white", flex: 1 }}>
+    <ScrollView
+      style={{ backgroundColor: "white", flex: 1, paddingVertical: 10 }}
+    >
       <View style={{ paddingBottom: 30 }}>
         {typeof totalEpisodes === "number" && totalEpisodes > 1 && (
           <Text>Total episodes: {totalEpisodes}</Text>

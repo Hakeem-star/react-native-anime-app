@@ -216,7 +216,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
                   description={description}
                   totalEpisodes={episodes}
                   tags={tags}
-                  coverImageColor={coverImageColor || ""}
+                  coverImageColor={coverImageColor || "#20232a"}
                   {...props}
                 />
               )}
@@ -225,7 +225,11 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
               <Tabs.Screen
                 name="Episodes"
                 children={(props) => (
-                  <Episodes {...props} streamingEpisodes={streamingEpisodes} />
+                  <Episodes
+                    coverImageColor={coverImageColor || "#20232a"}
+                    streamingEpisodes={streamingEpisodes}
+                    {...props}
+                  />
                 )}
               />
             )}
