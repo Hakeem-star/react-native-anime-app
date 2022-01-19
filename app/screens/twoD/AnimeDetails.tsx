@@ -29,7 +29,7 @@ const Wrapper = styled(View)`
 `;
 
 const DetailsWrapper = styled(View)`
-  margin-top: 70px;
+  /* margin-top: 70px; */
   padding: 15px;
   display: flex;
   flex: 1;
@@ -141,7 +141,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
               // },
               // shadowOpacity: 1,
               // shadowRadius: 9.11,
-              elevation: 14,
+              // elevation: 14,
               maxWidth: "100%",
             }}
           >
@@ -199,6 +199,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
           alignItems: "center",
           width: "100%",
           marginTop: 30,
+          position: "relative",
         }}
       >
         <Text style={styles.title}>
@@ -206,7 +207,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
         </Text>
       </View>
       <DetailsWrapper>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, marginTop: 40 }}>
           <Tabs.Navigator>
             <Tabs.Screen
               name="Description"
@@ -215,16 +216,19 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
                   description={description}
                   totalEpisodes={episodes}
                   tags={tags}
+                  coverImageColor={coverImageColor || ""}
                   {...props}
                 />
               )}
             />
-            <Tabs.Screen
-              name="Episodes"
-              children={(props) => (
-                <Episodes {...props} streamingEpisodes={streamingEpisodes} />
-              )}
-            />
+            {!!streamingEpisodes?.length && (
+              <Tabs.Screen
+                name="Episodes"
+                children={(props) => (
+                  <Episodes {...props} streamingEpisodes={streamingEpisodes} />
+                )}
+              />
+            )}
           </Tabs.Navigator>
         </View>
       </DetailsWrapper>
@@ -237,7 +241,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "600",
-    position: "absolute",
+    position: "relative",
     top: 34,
 
     textShadowColor: "rgba(255, 255, 255, 0.75)",
