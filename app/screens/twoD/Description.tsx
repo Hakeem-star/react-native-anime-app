@@ -20,17 +20,35 @@ const Description = ({
   tags,
 }: TopNavPropsDetails & Props) => {
   const { width } = useWindowDimensions();
-  console.log({ description });
-
+  // replace <br> with <div>
+  const cleanedDescription = description?.replace(/<br>/g, "<div></div>");
+  console.log({
+    description,
+    next: cleanedDescription,
+  });
   return (
     <ScrollView style={{ backgroundColor: "white", flex: 1 }}>
       <>
-        {!!totalEpisodes && totalEpisodes > 1 && (
+        {typeof totalEpisodes === "number" && totalEpisodes > 1 && (
           <Text>Total episodes: {totalEpisodes}</Text>
         )}
-        {!!description && (
+        {!!cleanedDescription && (
           <View style={{ marginBottom: 50, marginTop: 20 }}>
-            <RenderHtml contentWidth={width} source={{ html: description }} />
+            <RenderHtml
+              tagsStyles={{
+                div: {
+                  // Line break styles
+                  maxHeight: 0,
+                  height: "0px",
+                  padding: 0,
+                  marginBottom: 10,
+                },
+              }}
+              contentWidth={width}
+              source={{
+                html: cleanedDescription,
+              }}
+            />
           </View>
         )}
         {/* <Text>
@@ -40,7 +58,7 @@ const Description = ({
               }
             </Text> */}
       </>
-      {tags?.length && (
+      {!!tags?.length && (
         <>
           <Text>Tags</Text>
 

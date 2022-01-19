@@ -12,7 +12,9 @@ const Episodes = ({ streamingEpisodes }: Props) => {
       <FlatList
         data={streamingEpisodes}
         keyExtractor={(item) => (item?.url || "") + item?.title}
-        renderItem={(val) => <Text>{val.item?.title}</Text>}
+        renderItem={(val) => (
+          <Text style={{ marginBottom: 10 }}>{val.item?.title}</Text>
+        )}
       />
     </View>
   );
