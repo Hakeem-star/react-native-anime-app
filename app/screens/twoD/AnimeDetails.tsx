@@ -10,6 +10,7 @@ import {
   Animated,
   Easing,
   Image,
+  ScrollView,
 } from "react-native";
 import { RootStackPropsDetails } from "../../App";
 import { useAnimeQuery } from "../../generated/graphql";
@@ -36,7 +37,7 @@ const DetailsWrapper = styled(View)`
 `;
 
 const InnerWrap = styled(View)`
-  width: 30px;
+  width: 20px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -47,8 +48,8 @@ const BackIconWrapper = styled(TouchableOpacity)`
   position: absolute;
   top: 10px;
   left: 10px;
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   background-color: #1b1b1bce;
   border-radius: 5px;
   display: flex;
@@ -175,7 +176,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
         <InnerWrap>
           <Ionicons
             name="chevron-back-sharp"
-            size={30}
+            size={20}
             color="#ffffffc7"
             style={styles.touch}
             onPress={() => {
@@ -183,12 +184,6 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
                 showSearchBar: true,
               });
             }}
-          />
-          <Ionicons
-            name="chevron-back-sharp"
-            size={30}
-            color="#ffffffc7"
-            style={{ ...styles.touch, marginLeft: -20 }}
           />
         </InnerWrap>
       </BackIconWrapper>

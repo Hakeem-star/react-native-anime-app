@@ -13,6 +13,8 @@ interface Props {
   coverImageColor?: string;
 }
 
+const borderAlignmentOffset = 5;
+
 const Episodes = ({ streamingEpisodes, coverImageColor }: Props) => {
   // console.log({ streamingEpisodes });
 
@@ -33,15 +35,21 @@ const Episodes = ({ streamingEpisodes, coverImageColor }: Props) => {
               style={{
                 padding: 15,
                 marginBottom: -2,
-                // height: 50,
                 minHeight: 50,
                 borderRadius: 10,
                 borderColor: coverImageColor,
                 borderTopWidth: 2,
                 borderBottomWidth: 2,
-                borderRightWidth: index % 2 ? 0 : 1,
-                borderLeftWidth: index % 2 ? 1 : 0,
-                transform: [{ translateX: index % 2 ? -5 : 5 }],
+                borderRightWidth: index % 2 ? 0 : 2,
+                borderLeftWidth: index % 2 ? 2 : 0,
+                transform: [
+                  {
+                    translateX:
+                      index % 2
+                        ? -borderAlignmentOffset
+                        : borderAlignmentOffset,
+                  },
+                ],
                 borderTopLeftRadius: index % 2 ? 10 : 0,
                 borderBottomLeftRadius: index % 2 ? 10 : 0,
               }}
@@ -49,7 +57,14 @@ const Episodes = ({ streamingEpisodes, coverImageColor }: Props) => {
               <Text
                 style={{
                   // reposition the text so they are correctly aligned
-                  transform: [{ translateX: index % 2 ? 5 : -5 }],
+                  transform: [
+                    {
+                      translateX:
+                        index % 2
+                          ? borderAlignmentOffset
+                          : -borderAlignmentOffset,
+                    },
+                  ],
                 }}
               >
                 {item?.title}
