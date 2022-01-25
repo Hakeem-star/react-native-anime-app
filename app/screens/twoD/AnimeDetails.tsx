@@ -11,6 +11,8 @@ import {
   Easing,
   Image,
   ScrollView,
+  Modal,
+  Alert,
 } from "react-native";
 import { RootStackPropsDetails } from "../../App";
 import { useAnimeQuery } from "../../generated/graphql";
@@ -22,6 +24,7 @@ import {
 } from "@react-navigation/material-top-tabs";
 import Description from "./Description";
 import Episodes from "./Episodes";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const Wrapper = styled(View)`
   background-color: white;
@@ -57,7 +60,7 @@ const BackIconWrapper = styled(TouchableOpacity)`
   justify-content: center;
 `;
 
-const BackgroundImageWrapper = styled(View)`
+const BackgroundImageWrapper = styled(TouchableWithoutFeedback)`
   position: relative;
 `;
 
@@ -75,6 +78,7 @@ export type TopNavPropsDetails = MaterialTopTabScreenProps<
 const Tabs = createMaterialTopTabNavigator<TopNavParamList>();
 
 const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
+  const [fullScreenImage, setFullScreenImage] = useState(false);
   const anime = useAnimeQuery({ id: route.params.animID });
 
   const bannerImage = anime.data?.Media?.bannerImage;
@@ -114,11 +118,51 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
       }).start();
     }
   }, [imgSize]);
-  // console.log({ description });
 
   return (
     <Wrapper>
+      <Modal
+        style={{ backgroundColor: "red", display: "flex", zIndex: 10 }}
+        animationType="fade"
+        transparent={true}
+        visible={fullScreenImage}
+        onRequestClose={() => {
+          setFullScreenImage(false);
+        }}
+      >
+        <TouchableHighlight
+          style={{
+            width: "100%",
+            height: "100%",
+            flex: 1,
+            backgroundColor: "black",
+          }}
+          onPress={() => {
+            setFullScreenImage(false);
+          }}
+        >
+          <Image
+            resizeMode="contain"
+            style={{
+              // ...imgSize,
+              width: "100%",
+              height: "100%",
+              maxHeight: "100%",
+              maxWidth: "100%",
+            }}
+            source={{
+              uri:
+                anime.data?.Media?.bannerImage ||
+                anime.data?.Media?.coverImage?.large ||
+                "",
+            }}
+          />
+        </TouchableHighlight>
+      </Modal>
       <BackgroundImageWrapper
+        onPress={() => {
+          setFullScreenImage(!fullScreenImage);
+        }}
         style={{
           width: "100%",
           maxHeight: 180,
