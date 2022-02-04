@@ -12,16 +12,20 @@ interface Props {
   totalEpisodes?: number | null;
   tags?: AnimeDetailsFragment["tags"];
   coverImageColor?: string;
+  wrapperPadding: number;
 }
 
 const Description = ({
-  navigation,
-  route,
+  // navigation,
+  // route,
   description,
   totalEpisodes,
   tags,
   coverImageColor,
-}: TopNavPropsDetails & Props) => {
+
+  wrapperPadding,
+}: //  TopNavPropsDetails &
+Props) => {
   const { width } = useWindowDimensions();
   // replace <br> with <div>
   const cleanedDescription = description?.replace(/<br>/g, "<div></div>");
@@ -29,8 +33,13 @@ const Description = ({
   const [showAllTags, setShowAllTags] = useState(false);
 
   return (
-    <ScrollView
-      style={{ backgroundColor: "white", flex: 1, paddingVertical: 10 }}
+    <View
+      style={{
+        backgroundColor: "white",
+        maxWidth: width - wrapperPadding * 2,
+        paddingVertical: 10,
+        flexGrow: 1,
+      }}
     >
       <View style={{ paddingBottom: 30 }}>
         {typeof totalEpisodes === "number" && totalEpisodes > 1 && (
@@ -135,7 +144,7 @@ const Description = ({
           </>
         )}
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

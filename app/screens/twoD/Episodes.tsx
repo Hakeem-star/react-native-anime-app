@@ -6,6 +6,7 @@ import {
   Linking,
   TouchableHighlight,
   ImageBackground,
+  useWindowDimensions,
 } from "react-native";
 import { MediaStreamingEpisode } from "../../generated/graphql";
 import { LinearGradient } from "expo-linear-gradient";
@@ -13,15 +14,29 @@ import { LinearGradient } from "expo-linear-gradient";
 interface Props {
   streamingEpisodes?: (MediaStreamingEpisode | null)[] | null;
   coverImageColor?: string;
+  wrapperPadding: number;
 }
 
 const borderAlignmentOffset = 5;
 
-const Episodes = ({ streamingEpisodes, coverImageColor }: Props) => {
+const Episodes = ({
+  wrapperPadding,
+  streamingEpisodes,
+  coverImageColor,
+}: Props) => {
   // console.log({ streamingEpisodes });
+  const { width } = useWindowDimensions();
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white", paddingVertical: 10 }}>
+    <View
+      style={{
+        flex: 1,
+        maxWidth: width - wrapperPadding * 2,
+        backgroundColor: "white",
+        paddingVertical: 10,
+        flexGrow: 1,
+      }}
+    >
       <FlatList
         contentContainerStyle={{ padding: 10 }}
         data={streamingEpisodes}
