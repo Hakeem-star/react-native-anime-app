@@ -13,6 +13,7 @@ import {
   ScrollView,
   Modal,
   Alert,
+  useWindowDimensions,
 } from "react-native";
 import { RootStackPropsDetails } from "../../App";
 import { useAnimeQuery } from "../../generated/graphql";
@@ -26,7 +27,7 @@ import Description from "./Description";
 import Episodes from "./Episodes";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-const Wrapper = styled(View)`
+const Wrapper = styled(ScrollView)`
   background-color: white;
   flex: 1;
   display: flex;
@@ -80,6 +81,7 @@ const Tabs = createMaterialTopTabNavigator<TopNavParamList>();
 const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   const [fullScreenImage, setFullScreenImage] = useState(false);
   const anime = useAnimeQuery({ id: route.params.animID });
+  const { height } = useWindowDimensions();
 
   const bannerImage = anime.data?.Media?.bannerImage;
   const coverImage = anime.data?.Media?.coverImage?.large;
@@ -120,7 +122,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   }, [imgSize]);
 
   return (
-    <Wrapper>
+    <Wrapper nestedScrollEnabled={true}>
       <Modal
         style={{ backgroundColor: "red", display: "flex", zIndex: 10 }}
         animationType="fade"
@@ -245,7 +247,11 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
           {title?.english || title?.romaji || title?.native}
         </Text>
       </View>
-      <DetailsWrapper>
+      <DetailsWrapper
+        style={{
+          height: height + 400,
+        }}
+      >
         <View style={{ flex: 1, marginTop: 40 }}>
           <Tabs.Navigator>
             <Tabs.Screen

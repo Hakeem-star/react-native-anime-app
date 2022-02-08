@@ -23,6 +23,7 @@ const Episodes = ({ streamingEpisodes, coverImageColor }: Props) => {
   return (
     <View style={{ flex: 1, backgroundColor: "white", paddingVertical: 10 }}>
       <FlatList
+        nestedScrollEnabled={true}
         contentContainerStyle={{ padding: 10 }}
         data={streamingEpisodes}
         keyExtractor={(item) => (item?.url || "") + item?.title}
