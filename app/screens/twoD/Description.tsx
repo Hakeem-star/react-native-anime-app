@@ -30,6 +30,7 @@ const Description = ({
 
   return (
     <ScrollView
+      nestedScrollEnabled={true}
       style={{ backgroundColor: "white", flex: 1, paddingVertical: 10 }}
     >
       <View style={{ paddingBottom: 30 }}>

@@ -18,7 +18,7 @@ import {
 import { RootStackPropsDetails } from "../../App";
 import { useAnimeQuery } from "../../generated/graphql";
 import styled from "styled-components";
-import { Ionicons } from "@expo/vector-icons";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabScreenProps,
@@ -27,7 +27,7 @@ import Description from "./Description";
 import Episodes from "./Episodes";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-const Wrapper = styled(ScrollView)`
+const Wrapper = styled(View)`
   background-color: white;
   flex: 1;
   display: flex;
@@ -81,7 +81,7 @@ const Tabs = createMaterialTopTabNavigator<TopNavParamList>();
 const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   const [fullScreenImage, setFullScreenImage] = useState(false);
   const anime = useAnimeQuery({ id: route.params.animID });
-  const { height } = useWindowDimensions();
+  // const { height } = useWindowDimensions();
 
   const bannerImage = anime.data?.Media?.bannerImage;
   const coverImage = anime.data?.Media?.coverImage?.large;
@@ -95,6 +95,10 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   const opacity = useRef(new Animated.Value(0.5)).current;
   const imgRef = useRef<Image>(null);
   const [imgSize, setImgSize] = useState({ width: 0, height: 0 });
+
+  const [showBanner, setShowBanner] = useState(true);
+
+  // const height = useRef(new Animated.Value(180)).current;
 
   useEffect(() => {
     if (bannerImage || coverImage) {
@@ -122,7 +126,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   }, [imgSize]);
 
   return (
-    <Wrapper nestedScrollEnabled={true}>
+    <Wrapper>
       <Modal
         style={{ backgroundColor: "red", display: "flex", zIndex: 10 }}
         animationType="fade"
@@ -161,55 +165,50 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
           />
         </TouchableHighlight>
       </Modal>
-      <BackgroundImageWrapper
-        onPress={() => {
-          setFullScreenImage(!fullScreenImage);
-        }}
-        style={{
-          width: "100%",
-          maxHeight: 180,
-          height: 180,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "white",
-        }}
-      >
-        {(!!bannerImage || !!coverImage) && (
-          <Animated.View
-            style={{
-              backgroundColor: "white",
-              transform: [{ scale }, { translateY: 30 }],
-              // shadowColor: coverImageColor || "",
-              // opacity,
-              // shadowOffset: {
-              //   width: 0,
-              //   height: 7,
-              // },
-              // shadowOpacity: 1,
-              // shadowRadius: 9.11,
-              // elevation: 14,
-              maxWidth: "100%",
-            }}
-          >
-            <Image
-              ref={imgRef}
-              resizeMode="contain"
+      {!!showBanner && (
+        <BackgroundImageWrapper
+          onPress={() => {
+            setFullScreenImage(!fullScreenImage);
+          }}
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "white",
+            maxHeight: 180,
+            height: 180,
+          }}
+        >
+          {(!!bannerImage || !!coverImage) && (
+            <Animated.View
               style={{
-                ...imgSize,
-                maxHeight: "100%",
+                backgroundColor: "white",
+                transform: [{ scale: scale }, { translateY: 30 }],
+
                 maxWidth: "100%",
               }}
-              source={{
-                uri:
-                  anime.data?.Media?.bannerImage ||
-                  anime.data?.Media?.coverImage?.large ||
-                  "",
-              }}
-            />
-          </Animated.View>
-        )}
-      </BackgroundImageWrapper>
+            >
+              <Image
+                ref={imgRef}
+                resizeMode="contain"
+                style={{
+                  ...imgSize,
+                  maxHeight: "100%",
+                  maxWidth: "100%",
+                }}
+                source={{
+                  uri:
+                    anime.data?.Media?.bannerImage ||
+                    anime.data?.Media?.coverImage?.large ||
+                    "",
+                }}
+              />
+            </Animated.View>
+          )}
+        </BackgroundImageWrapper>
+      )}
+
       <BackIconWrapper
         style={{ ...styles.wrapper, shadowColor: coverImageColor || "" }}
         activeOpacity={0.6}
@@ -243,16 +242,28 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
           position: "relative",
         }}
       >
-        <Text style={styles.title}>
-          {title?.english || title?.romaji || title?.native}
-        </Text>
+        <View
+          style={{ ...styles.title, display: "flex", flexDirection: "row" }}
+        >
+          <Text>{title?.english || title?.romaji || title?.native}</Text>
+          <Entypo
+            name="triangle-up"
+            size={24}
+            color="black"
+            onPress={() => {
+              setShowBanner(!showBanner);
+            }}
+          />
+        </View>
       </View>
-      <DetailsWrapper
-        style={{
-          height: height + 400,
-        }}
-      >
-        <View style={{ flex: 1, marginTop: 40 }}>
+      <DetailsWrapper>
+        <View
+          style={{
+            flex: 1,
+            marginTop: 40,
+            overflow: "hidden",
+          }}
+        >
           <Tabs.Navigator>
             <Tabs.Screen
               name="Description"
