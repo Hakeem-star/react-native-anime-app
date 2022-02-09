@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, memo } from "react";
 import {
   View,
   Text,
@@ -19,14 +19,15 @@ const borderAlignmentOffset = 5;
 
 const Episodes = ({ streamingEpisodes, coverImageColor }: Props) => {
   // console.log({ streamingEpisodes });
+  const getKey = (item: MediaStreamingEpisode | null) =>
+    (item?.url || "") + item?.title;
 
   return (
     <View style={{ flex: 1, backgroundColor: "white", paddingVertical: 10 }}>
       <FlatList
-        nestedScrollEnabled={true}
         contentContainerStyle={{ padding: 10 }}
         data={streamingEpisodes}
-        keyExtractor={(item) => (item?.url || "") + item?.title}
+        keyExtractor={getKey}
         renderItem={({ item, index }) => {
           return (
             <TouchableHighlight
@@ -113,4 +114,4 @@ const Episodes = ({ streamingEpisodes, coverImageColor }: Props) => {
   );
 };
 
-export default Episodes;
+export default memo(Episodes);

@@ -18,7 +18,7 @@ import {
 import { RootStackPropsDetails } from "../../App";
 import { useAnimeQuery } from "../../generated/graphql";
 import styled from "styled-components";
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabScreenProps,
@@ -92,13 +92,10 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   const episodes = anime.data?.Media?.episodes;
   const streamingEpisodes = anime.data?.Media?.streamingEpisodes;
   const scale = useRef(new Animated.Value(1)).current;
-  const opacity = useRef(new Animated.Value(0.5)).current;
   const imgRef = useRef<Image>(null);
   const [imgSize, setImgSize] = useState({ width: 0, height: 0 });
 
   const [showBanner, setShowBanner] = useState(true);
-
-  // const height = useRef(new Animated.Value(180)).current;
 
   useEffect(() => {
     if (bannerImage || coverImage) {
@@ -115,15 +112,11 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
         useNativeDriver: true,
         duration: 500,
       }).start();
-
-      Animated.timing(opacity, {
-        toValue: 1,
-        useNativeDriver: true,
-        duration: 500,
-        delay: 100,
-      }).start();
     }
   }, [imgSize]);
+
+  // show loading
+  if (!title) return null;
 
   return (
     <Wrapper>
@@ -243,17 +236,25 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
         }}
       >
         <View
-          style={{ ...styles.title, display: "flex", flexDirection: "row" }}
+          style={{
+            ...styles.title,
+            display: "flex",
+            flexDirection: "row",
+          }}
         >
           <Text>{title?.english || title?.romaji || title?.native}</Text>
-          <Entypo
-            name="triangle-up"
-            size={24}
-            color="black"
+          <TouchableOpacity
+            style={{ marginLeft: 15 }}
             onPress={() => {
               setShowBanner(!showBanner);
             }}
-          />
+          >
+            <MaterialIcons
+              name={!showBanner ? "fullscreen" : "fullscreen-exit"}
+              size={24}
+              color="black"
+            />
+          </TouchableOpacity>
         </View>
       </View>
       <DetailsWrapper>

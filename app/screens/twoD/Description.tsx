@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import { View, Text, FlatList, ScrollView } from "react-native";
 import { AnimeDetailsFragment, MediaTag } from "../../generated/graphql";
 import { getHTMLText } from "../../util/getHTMLText";
@@ -140,4 +140,4 @@ const Description = ({
   );
 };
 
-export default Description;
+export default memo(Description);
