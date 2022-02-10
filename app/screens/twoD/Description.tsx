@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { useState, memo, useMemo } from "react";
 import { View, Text, FlatList, ScrollView } from "react-native";
 import { AnimeDetailsFragment, MediaTag } from "../../generated/graphql";
 import { getHTMLText } from "../../util/getHTMLText";
@@ -27,6 +27,22 @@ const Description = ({
   const cleanedDescription = description?.replace(/<br>/g, "<div></div>");
 
   const [showAllTags, setShowAllTags] = useState(false);
+
+  const sortedTags = useMemo(
+    () =>
+      tags?.sort((a, b) => {
+        const nameA = a?.name.toUpperCase() || "";
+        const nameB = b?.name.toUpperCase() || "";
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      }),
+    [tags]
+  );
 
   return (
     <ScrollView
@@ -63,7 +79,7 @@ const Description = ({
               }
             </Text> */}
 
-        {!!tags?.length && (
+        {!!sortedTags?.length && (
           <>
             <Text
               style={{
@@ -86,7 +102,7 @@ const Description = ({
                 flexWrap: "wrap",
               }}
             >
-              {tags?.map((tag, idx) => {
+              {sortedTags?.map((tag, idx) => {
                 if (idx > 4 && !showAllTags) return null;
                 return (
                   <View
@@ -118,7 +134,7 @@ const Description = ({
                 );
               })}
             </View>
-            {!showAllTags && !!(tags.length > 5) && (
+            {!showAllTags && !!(sortedTags.length > 5) && (
               <Text
                 style={{
                   marginTop: 20,
