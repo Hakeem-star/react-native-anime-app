@@ -25,8 +25,6 @@ const Episodes = ({
   coverImageColor,
 }: Props) => {
   // console.log({ streamingEpisodes });
-  const getKey = (item: MediaStreamingEpisode | null) =>
-    (item?.url || "") + item?.title;
   const { width } = useWindowDimensions();
 
   return (

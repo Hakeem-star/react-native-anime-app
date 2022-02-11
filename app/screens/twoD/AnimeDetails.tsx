@@ -122,9 +122,6 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   }, [imgSize]);
   // console.log({ topNavContentHeight, scrollPage });
 
-  // show loading
-  if (!title) return null;
-
   return (
     <Wrapper>
       <Modal
