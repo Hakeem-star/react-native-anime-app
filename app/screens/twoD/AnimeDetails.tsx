@@ -27,15 +27,19 @@ import Description from "./Description";
 import Episodes from "./Episodes";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-const Wrapper = styled(View)`
+const Content = styled(ScrollView)`
+  width: 100%;
+`;
+
+const Wrapper = styled(ScrollView)`
   background-color: white;
   flex: 1;
   display: flex;
 `;
-
+const wrapperPadding = 15;
 const DetailsWrapper = styled(View)`
   /* margin-top: 70px; */
-  padding: 15px;
+  padding: ${`${wrapperPadding}px`};
   display: flex;
   flex: 1;
 `;
@@ -80,6 +84,8 @@ const Tabs = createMaterialTopTabNavigator<TopNavParamList>();
 
 const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
   const [fullScreenImage, setFullScreenImage] = useState(false);
+  const [topNavContentHeight, setTopNavContentHeight] = useState([0, 0]);
+  const [scrollPage, setScrollPage] = useState(0);
   const anime = useAnimeQuery({ id: route.params.animID });
   // const { height } = useWindowDimensions();
 
@@ -114,6 +120,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
       }).start();
     }
   }, [imgSize]);
+  // console.log({ topNavContentHeight, scrollPage });
 
   // show loading
   if (!title) return null;
@@ -258,14 +265,56 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
         </View>
       </View>
       <DetailsWrapper>
-        <View
-          style={{
-            flex: 1,
-            marginTop: 40,
-            overflow: "hidden",
-          }}
-        >
-          <Tabs.Navigator>
+        <View style={{ flex: 1, marginTop: 40 }}>
+          {/* <View> */}
+          <Content
+            style={
+              {
+                // height: topNavContentHeight[scrollPage],
+              }
+            }
+            horizontal
+            pagingEnabled
+            contentContainerStyle={{ flexGrow: 1 }}
+            onScroll={(e) => {
+              e.nativeEvent.contentOffset;
+            }}
+            onContentSizeChange={(a, b) => {
+              console.log({ a, b });
+
+              setTopNavContentHeight([a, b]);
+            }}
+            onMomentumScrollEnd={(e) => {
+              setScrollPage(
+                Number(
+                  e.nativeEvent.contentOffset.x >=
+                    e.nativeEvent.contentSize.width / 3
+                )
+              );
+
+              // console.log(
+              //   e.nativeEvent.contentOffset.x >=
+              //     e.nativeEvent.contentSize.width / 3,
+              //   e.nativeEvent.contentOffset.x,
+              //   e.nativeEvent.contentSize.width / 3
+              // );
+            }}
+          >
+            <Description
+              wrapperPadding={wrapperPadding}
+              description={description}
+              totalEpisodes={episodes}
+              tags={tags}
+              coverImageColor={coverImageColor || "#20232a"}
+            />
+            <Episodes
+              wrapperPadding={wrapperPadding}
+              coverImageColor={coverImageColor || "#20232a"}
+              streamingEpisodes={streamingEpisodes}
+            />
+          </Content>
+          {/* </View> */}
+          {/* <Tabs.Navigator>
             <Tabs.Screen
               name="Description"
               children={(props) => (
@@ -290,7 +339,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
                 )}
               />
             )}
-          </Tabs.Navigator>
+          </Tabs.Navigator> */}
         </View>
       </DetailsWrapper>
     </Wrapper>
