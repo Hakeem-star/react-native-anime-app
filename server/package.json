@@ -11,12 +11,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^3.9.2",
     "apollo-server": "^3.6.3",
     "graphql": "^16.3.0",
     "nodemon": "^2.0.15"
   },
   "devDependencies": {
     "@types/node": "^14.14.31",
-    "@types/puppeteer": "^5.4.3"
+    "@types/puppeteer": "^5.4.3",
+    "prisma": "^3.9.2"
   }
 }

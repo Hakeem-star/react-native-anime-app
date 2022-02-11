@@ -1,35 +1,25 @@
 import { ApolloServer, gql } from "apollo-server";
 import { resolvers } from "./resolvers";
+import { PrismaClient } from "@prisma/client";
+import { ExpressContext } from "apollo-server-express";
+import { ContextFunction } from "apollo-server-core";
+import { typeDefs } from "./typeDefs/schema";
 
-const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
+const prisma = new PrismaClient();
 
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
-  }
+export interface Context {
+  prisma: PrismaClient;
+}
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
-  type Query {
-    books: [Book]
-  }
-`;
+export const context: ContextFunction<ExpressContext & Context> = (args) => {
+  return { ...args, prisma };
+};
 
-const books = [
-  {
-    title: "The Awakening",
-    author: "Kate Chopin",
-  },
-  {
-    title: "City of Glass",
-    author: "Paul Auster",
-  },
-];
-
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context,
+});
 
 server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`);
