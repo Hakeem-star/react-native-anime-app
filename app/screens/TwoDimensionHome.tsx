@@ -5,13 +5,14 @@ import Page from "../components/Page";
 
 import {
   AnimeMediaFragment,
+  AnimesQuery,
   CoverImageFragment,
   useAnimesQuery,
   useInfiniteAnimesQuery,
 } from "../generated/graphql";
 import debounce from "lodash.debounce";
 import { useInfiniteGraphQLQuery } from "../util/useInfiniteGraphQLQuery";
-import { useQueryClient } from "react-query";
+import { InfiniteData, useQueryClient } from "react-query";
 import { RootStackProps } from "../App";
 import AnimeResult from "../components/TwoDimension/AnimeResult";
 import { Gyroscope, ThreeAxisMeasurement } from "expo-sensors";
@@ -26,6 +27,10 @@ interface Props {}
 const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
   const [text, setText] = useState("");
   const [offsetY, setOffsetY] = useState(0);
+  const [finalData, setFinalData] = useState<
+    InfiniteData<AnimesQuery> | undefined | null
+  >(null);
+
   const [subscription, setSubscription] = useState<ReturnType<
     typeof Gyroscope.addListener
   > | null>(null);
@@ -60,7 +65,7 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
     return () => _unsubscribe();
   }, [setGyroData]);
 
-  const { fetchNextPage, hasNextPage, data, isLoading, refetch } =
+  const { fetchNextPage, hasNextPage, data, isLoading, refetch, remove } =
     useInfiniteAnimesQuery(
       "page",
       { name: text.trim(), page: 1 },
@@ -70,34 +75,27 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
           if (lastPage?.Page?.pageInfo?.hasNextPage) {
             return { page: (lastPage?.Page?.pageInfo?.currentPage || 0) + 1 };
           }
-
-          console.log({ result });
-
           return undefined;
         },
       }
     );
 
-  const debouncedRefetch = useMemo(
-    () =>
-      debounce(() => {
-        // queryClient.resetQueries("animes", { exact: true });
-
-        refetch();
-      }, 20),
-    [refetch]
-  );
-
   useEffect(() => {
     if (text) {
       refetch();
+    } else {
+      console.log("OI");
+
+      setFinalData(null);
     }
   }, [text]);
-  // console.log({ data });
+  useEffect(() => {
+    setFinalData(data);
+  }, [data]);
 
   const result = useMemo(
     () =>
-      data?.pages?.reduce((acc, current) => {
+      finalData?.pages?.reduce((acc, current) => {
         return [
           ...acc,
           ...(current.Page?.media?.filter((media) => {
@@ -113,8 +111,9 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
           }) || []),
         ];
       }, [] as ((AnimeMediaFragment & CoverImageFragment) | null)[]),
-    [data]
+    [finalData]
   );
+  console.log({ isLoading });
 
   return (
     <Page>
@@ -140,48 +139,67 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
         )}
         {result?.length ? (
           <>
-            <FlatList
-              ListFooterComponent={
-                <View
-                  style={{
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    flex: 0.9,
-                    width: "80%",
-                    height: 1,
-                    backgroundColor: "rgba(0,0,0,0.2)",
-                    borderRadius: 50,
-                  }}
-                />
-              }
-              ListFooterComponentStyle={{
-                width: "100%",
-                height: 3,
-                marginTop: 5,
-                marginBottom: 5,
-              }}
+            <View
               style={{
                 flex: 1,
                 marginTop: 20,
+                borderRadius: 15,
+                overflow: "hidden",
+                marginBottom: 5,
               }}
-              onEndReached={() => {
-                // queryClient.resetQueries("animes", { exact: true });
-                fetchNextPage();
-              }}
-              contentContainerStyle={{
-                display: "flex",
-                alignItems: "flex-start",
-                // paddingBottom: 20,
-              }}
-              data={result}
-              renderItem={(item) => {
-                return item.item ? (
-                  <AnimeResult anime={item.item} rotation={gyroData} />
-                ) : null;
-              }}
-              numColumns={2}
-              horizontal={false}
-            />
+            >
+              <FlatList
+                ListFooterComponent={
+                  <View
+                    style={{
+                      display: !isLoading ? "flex" : "none",
+                      marginLeft: "auto",
+                      marginRight: "auto",
+                      flex: 0.9,
+                      width: "80%",
+                      height: 1,
+                      backgroundColor: "#7a0b0b39",
+                      borderRadius: 50,
+                    }}
+                  />
+                }
+                ListFooterComponentStyle={{
+                  width: "100%",
+                  height: 3,
+                  marginTop: 5,
+                  marginBottom: 5,
+                }}
+                columnWrapperStyle={{
+                  overflow: "hidden",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                showsVerticalScrollIndicator={false}
+                style={{
+                  flex: 1,
+                }}
+                onEndReached={() => {
+                  fetchNextPage();
+                }}
+                contentContainerStyle={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                }}
+                data={result}
+                renderItem={({ index, item }) => {
+                  return item ? (
+                    <AnimeResult
+                      index={index}
+                      anime={item}
+                      rotation={gyroData}
+                    />
+                  ) : null;
+                }}
+                numColumns={2}
+                horizontal={false}
+              />
+            </View>
           </>
         ) : // We should only be showing this if we have stopped typing for a while
         text ? (

@@ -27,11 +27,12 @@ import {
 interface Props {
   anime: (AnimeMediaFragment & CoverImageFragment) | null;
   rotation: ThreeAxisMeasurement;
+  index: number;
 }
 
 // Add tilt when scrolling up or down - TODO
 
-const AnimeResult = ({ anime, rotation }: Props): JSX.Element => {
+const AnimeResult = ({ anime, rotation, index }: Props): JSX.Element => {
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, "Anime Details">>();
   const ref = useRef<View>(null);
@@ -105,6 +106,9 @@ const AnimeResult = ({ anime, rotation }: Props): JSX.Element => {
         ref={ref}
         style={{
           ...styles.container,
+          marginRight: index % 2 ? 0 : 8,
+          marginBottom: 8,
+
           transform: [
             { perspective: 350 },
             { rotateX: xInterpolate },
@@ -136,7 +140,6 @@ const styles = StyleSheet.create({
     width: 180,
     height: 180,
     backgroundColor: "transparent",
-    margin: 4,
     borderRadius: 10,
     overflow: "hidden",
 

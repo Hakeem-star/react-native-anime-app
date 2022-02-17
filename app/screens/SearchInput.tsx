@@ -39,6 +39,7 @@ const SearchInput = ({ defaultText = "", onChange, placeholder }: Props) => {
         <TouchableHighlight
           onPress={() => {
             setText("");
+            onChange("");
           }}
           style={{
             position: "absolute",
