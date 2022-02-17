@@ -15,6 +15,13 @@ generates:
     documents: "../app/graphql/**/*.graphql"
     config:
       withHooks: true
+      fetcher:
+        # Rather than using localhost, the emuluator might interfere. Will need to update this to env
+        endpoint: "http://192.168.1.18:4000"
+        fetchParams:
+          headers:
+            Content-Type: "application/json"
+            Accept: "application/json"
     plugins:
       - "typescript"
       - "typescript-operations"

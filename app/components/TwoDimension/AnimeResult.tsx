@@ -23,6 +23,7 @@ import {
   AnimeMediaFragment,
   CoverImageFragment,
 } from "../../generated/graphql";
+import { useCreateUserMutation } from "../../generated/server/graphql";
 
 interface Props {
   anime: (AnimeMediaFragment & CoverImageFragment) | null;
@@ -33,6 +34,7 @@ interface Props {
 // Add tilt when scrolling up or down - TODO
 
 const AnimeResult = ({ anime, rotation, index }: Props): JSX.Element => {
+  useCreateUserMutation;
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, "Anime Details">>();
   const ref = useRef<View>(null);

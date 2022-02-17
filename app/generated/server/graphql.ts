@@ -5,11 +5,11 @@ export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K]
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 
-function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, query: string, variables?: TVariables) {
+function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
   return async (): Promise<TData> => {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      ...requestInit,
+    const res = await fetch("http://192.168.1.18:4000", {
+    method: "POST",
+    ...({"headers":{"Content-Type":"application/json","Accept":"application/json"}}),
       body: JSON.stringify({ query, variables }),
     });
 
@@ -92,13 +92,12 @@ export const useUserQuery = <
       TData = UserQuery,
       TError = unknown
     >(
-      dataSource: { endpoint: string, fetchParams?: RequestInit },
       variables?: UserQueryVariables,
       options?: UseQueryOptions<UserQuery, TError, TData>
     ) =>
     useQuery<UserQuery, TError, TData>(
       variables === undefined ? ['user'] : ['user', variables],
-      fetcher<UserQuery, UserQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, UserDocument, variables),
+      fetcher<UserQuery, UserQueryVariables>(UserDocument, variables),
       options
     );
 export const CreateUserDocument = `
@@ -111,12 +110,9 @@ export const CreateUserDocument = `
 export const useCreateUserMutation = <
       TError = unknown,
       TContext = unknown
-    >(
-      dataSource: { endpoint: string, fetchParams?: RequestInit },
-      options?: UseMutationOptions<CreateUserMutation, TError, CreateUserMutationVariables, TContext>
-    ) =>
+    >(options?: UseMutationOptions<CreateUserMutation, TError, CreateUserMutationVariables, TContext>) =>
     useMutation<CreateUserMutation, TError, CreateUserMutationVariables, TContext>(
       ['createUser'],
-      (variables?: CreateUserMutationVariables) => fetcher<CreateUserMutation, CreateUserMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CreateUserDocument, variables)(),
+      (variables?: CreateUserMutationVariables) => fetcher<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, variables)(),
       options
     );

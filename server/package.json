@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/App.ts",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.yml",
+    "//": "Android studio uses the default port 5555",
+    "studio": "prisma studio --port 5556"
   },
   "keywords": [],
   "author": "",

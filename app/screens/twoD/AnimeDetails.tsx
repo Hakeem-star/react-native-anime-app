@@ -26,6 +26,7 @@ import {
 import Description from "./Description";
 import Episodes from "./Episodes";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { useCreateUserMutation } from "../../generated/server/graphql";
 
 const Wrapper = styled(View)`
   background-color: white;
@@ -79,6 +80,15 @@ export type TopNavPropsDetails = MaterialTopTabScreenProps<
 const Tabs = createMaterialTopTabNavigator<TopNavParamList>();
 
 const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
+  // Script to create a user
+  // const { mutate: createUser, error } = useCreateUserMutation();
+  // useEffect(() => {
+  //   console.log("OI");
+
+  //   createUser({ data: { email: "EEEMAIL", name: "OMG" } });
+  // }, []);
+  // console.log({ error });
+
   const [fullScreenImage, setFullScreenImage] = useState(false);
   const anime = useAnimeQuery({ id: route.params.animID });
   // const { height } = useWindowDimensions();
