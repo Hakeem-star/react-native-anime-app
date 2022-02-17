@@ -1,0 +1,17 @@
+fragment user on User {
+  name
+  email
+  password
+}
+
+query user {
+  user {
+    ...user
+  }
+}
+
+mutation createUser($data: CreateUserInput!) {
+  createUser(data: $data) {
+    ...user
+  }
+}

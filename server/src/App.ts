@@ -4,14 +4,11 @@ import { PrismaClient } from "@prisma/client";
 import { ExpressContext } from "apollo-server-express";
 import { ContextFunction } from "apollo-server-core";
 import { typeDefs } from "./typeDefs/schema";
+import { Context } from "../types";
 
 const prisma = new PrismaClient();
 
-export interface Context {
-  prisma: PrismaClient;
-}
-
-export const context: ContextFunction<ExpressContext & Context> = (args) => {
+export const context: ContextFunction<Context> = (args) => {
   return { ...args, prisma };
 };
 
