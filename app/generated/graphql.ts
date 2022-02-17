@@ -4786,12 +4786,6 @@ export const useAnimesQuery = <
       fetcher<AnimesQuery, AnimesQueryVariables>(AnimesDocument, variables),
       options
     );
-useAnimesQuery.document = AnimesDocument;
-
-
-useAnimesQuery.getKey = (variables?: AnimesQueryVariables) => variables === undefined ? ['animes'] : ['animes', variables];
-;
-
 export const useInfiniteAnimesQuery = <
       TData = AnimesQuery,
       TError = unknown
@@ -4805,10 +4799,6 @@ export const useInfiniteAnimesQuery = <
       (metaData) => fetcher<AnimesQuery, AnimesQueryVariables>(AnimesDocument, {...variables, ...(metaData.pageParam ?? {})})(),
       options
     );
-
-
-useInfiniteAnimesQuery.getKey = (variables?: AnimesQueryVariables) => variables === undefined ? ['animes.infinite'] : ['animes.infinite', variables];
-;
 
 export const AnimeDocument = `
     query anime($id: Int) {
@@ -4829,12 +4819,6 @@ export const useAnimeQuery = <
       fetcher<AnimeQuery, AnimeQueryVariables>(AnimeDocument, variables),
       options
     );
-useAnimeQuery.document = AnimeDocument;
-
-
-useAnimeQuery.getKey = (variables?: AnimeQueryVariables) => variables === undefined ? ['anime'] : ['anime', variables];
-;
-
 export const useInfiniteAnimeQuery = <
       TData = AnimeQuery,
       TError = unknown
@@ -4848,9 +4832,5 @@ export const useInfiniteAnimeQuery = <
       (metaData) => fetcher<AnimeQuery, AnimeQueryVariables>(AnimeDocument, {...variables, ...(metaData.pageParam ?? {})})(),
       options
     );
-
-
-useInfiniteAnimeQuery.getKey = (variables?: AnimeQueryVariables) => variables === undefined ? ['anime.infinite'] : ['anime.infinite', variables];
-;
 
 export { fetcher }

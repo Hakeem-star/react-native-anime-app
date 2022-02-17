@@ -14,8 +14,6 @@ generates:
       - "typescript-react-query"
     config:
       withHooks: true
-      exposeQueryKeys: true
-      exposeDocument: true
       addInfiniteQuery: true
       fetcher:
         endpoint: "ANILIST_ENDPOINT"
