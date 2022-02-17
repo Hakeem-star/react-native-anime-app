@@ -18191,7 +18191,7 @@
           },
           {
             "name": "total",
-            "description": "The total number of items",
+            "description": "The total number of items. Note: This value is not guaranteed to be accurate, do not rely on this for logic",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -30105,7 +30105,20 @@
           {
             "name": "args",
             "description": null,
-            "args": [],
+            "args": [
+              {
+                "name": "includeDeprecated",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": "false",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,

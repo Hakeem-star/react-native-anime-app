@@ -1,5 +1,5 @@
 import { ANILIST_ENDPOINT } from '../constants/queryConfigs';
-import { useQuery, UseQueryOptions } from 'react-query';
+import { useQuery, UseQueryOptions, useInfiniteQuery, UseInfiniteQueryOptions, QueryFunctionContext } from 'react-query';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -8,11 +8,11 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Mayb
 function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
   return async (): Promise<TData> => {
     const res = await fetch(ANILIST_ENDPOINT as string, {
-      method: "POST",
-      headers: {"Content-Type":"application/json","Accept":"application/json"},
+    method: "POST",
+    ...({"headers":{"Content-Type":"application/json","Accept":"application/json"}}),
       body: JSON.stringify({ query, variables }),
     });
-    
+
     const json = await res.json();
 
     if (json.errors) {
@@ -2857,7 +2857,7 @@ export type PageInfo = {
   lastPage?: Maybe<Scalars['Int']>;
   /** The count on a page */
   perPage?: Maybe<Scalars['Int']>;
-  /** The total number of items */
+  /** The total number of items. Note: This value is not guaranteed to be accurate, do not rely on this for logic */
   total?: Maybe<Scalars['Int']>;
 };
 
@@ -4778,17 +4778,37 @@ export const useAnimesQuery = <
       TData = AnimesQuery,
       TError = unknown
     >(
-      variables?: AnimesQueryVariables, 
+      variables?: AnimesQueryVariables,
       options?: UseQueryOptions<AnimesQuery, TError, TData>
-    ) => 
+    ) =>
     useQuery<AnimesQuery, TError, TData>(
-      ['animes', variables],
+      variables === undefined ? ['animes'] : ['animes', variables],
       fetcher<AnimesQuery, AnimesQueryVariables>(AnimesDocument, variables),
       options
     );
 useAnimesQuery.document = AnimesDocument;
 
-useAnimesQuery.getKey = (variables?: AnimesQueryVariables) => ['animes', variables];
+
+useAnimesQuery.getKey = (variables?: AnimesQueryVariables) => variables === undefined ? ['animes'] : ['animes', variables];
+;
+
+export const useInfiniteAnimesQuery = <
+      TData = AnimesQuery,
+      TError = unknown
+    >(
+      pageParamKey: keyof AnimesQueryVariables,
+      variables?: AnimesQueryVariables,
+      options?: UseInfiniteQueryOptions<AnimesQuery, TError, TData>
+    ) =>
+    useInfiniteQuery<AnimesQuery, TError, TData>(
+      variables === undefined ? ['animes.infinite'] : ['animes.infinite', variables],
+      (metaData) => fetcher<AnimesQuery, AnimesQueryVariables>(AnimesDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    );
+
+
+useInfiniteAnimesQuery.getKey = (variables?: AnimesQueryVariables) => variables === undefined ? ['animes.infinite'] : ['animes.infinite', variables];
+;
 
 export const AnimeDocument = `
     query anime($id: Int) {
@@ -4801,16 +4821,36 @@ export const useAnimeQuery = <
       TData = AnimeQuery,
       TError = unknown
     >(
-      variables?: AnimeQueryVariables, 
+      variables?: AnimeQueryVariables,
       options?: UseQueryOptions<AnimeQuery, TError, TData>
-    ) => 
+    ) =>
     useQuery<AnimeQuery, TError, TData>(
-      ['anime', variables],
+      variables === undefined ? ['anime'] : ['anime', variables],
       fetcher<AnimeQuery, AnimeQueryVariables>(AnimeDocument, variables),
       options
     );
 useAnimeQuery.document = AnimeDocument;
 
-useAnimeQuery.getKey = (variables?: AnimeQueryVariables) => ['anime', variables];
+
+useAnimeQuery.getKey = (variables?: AnimeQueryVariables) => variables === undefined ? ['anime'] : ['anime', variables];
+;
+
+export const useInfiniteAnimeQuery = <
+      TData = AnimeQuery,
+      TError = unknown
+    >(
+      pageParamKey: keyof AnimeQueryVariables,
+      variables?: AnimeQueryVariables,
+      options?: UseInfiniteQueryOptions<AnimeQuery, TError, TData>
+    ) =>
+    useInfiniteQuery<AnimeQuery, TError, TData>(
+      variables === undefined ? ['anime.infinite'] : ['anime.infinite', variables],
+      (metaData) => fetcher<AnimeQuery, AnimeQueryVariables>(AnimeDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    );
+
+
+useInfiniteAnimeQuery.getKey = (variables?: AnimeQueryVariables) => variables === undefined ? ['anime.infinite'] : ['anime.infinite', variables];
+;
 
 export { fetcher }

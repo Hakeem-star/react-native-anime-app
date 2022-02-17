@@ -25,7 +25,7 @@ import DimensionSelector from "./screens/DimensionSelector";
 import AnimeDetails from "./screens/twoD/AnimeDetails";
 import { LogBox } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import ThreeDimensionHome from "./screens/threeD/ThreeDimensionHome";
+// import ThreeDimensionHome from "./screens/threeD/ThreeDimensionHome";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 const queryClient = new QueryClient();

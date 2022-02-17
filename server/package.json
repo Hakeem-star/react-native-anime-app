@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/App.ts"
+    "start": "nodemon src/App.ts",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@graphql-codegen/cli": "^2.6.1",
     "@prisma/client": "^3.9.2",
     "apollo-server": "^3.6.3",
     "graphql": "^16.3.0",
@@ -19,6 +21,9 @@
   "devDependencies": {
     "@types/node": "^14.14.31",
     "@types/puppeteer": "^5.4.3",
-    "prisma": "^3.9.2"
+    "prisma": "^3.9.2",
+    "@graphql-codegen/typescript": "2.4.3",
+    "@graphql-codegen/introspection": "2.1.1",
+    "@graphql-codegen/cli": "2.6.1"
   }
 }
