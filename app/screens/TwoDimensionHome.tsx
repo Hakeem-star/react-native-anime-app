@@ -113,7 +113,6 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
       }, [] as ((AnimeMediaFragment & CoverImageFragment) | null)[]),
     [finalData]
   );
-  console.log({ isLoading });
 
   return (
     <Page>
