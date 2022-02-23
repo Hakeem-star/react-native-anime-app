@@ -1,15 +1,9 @@
-import { View, Text } from "react-native";
-import React from "react";
-import THREE, {
-  BoxBufferGeometry,
-  Mesh,
-  MeshBasicMaterial,
-  PerspectiveCamera,
-  Scene,
-} from "three";
-import { Renderer } from "expo-three";
+import { View, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { THREE, Renderer } from "expo-three";
 import { ExpoWebGLRenderingContext, GLView } from "expo-gl";
-
+const { BoxBufferGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene } =
+  THREE;
 type Props = {};
 
 const ThreeDimensionHome = (props: Props) => {
@@ -22,8 +16,6 @@ const ThreeDimensionHome = (props: Props) => {
       1000
     );
 
-    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-    // gl.clearColor(0, 1, 1, 1);
     camera.position.z = 2;
 
     // Create a WebGLRenderer without a DOM element
@@ -50,10 +42,9 @@ const ThreeDimensionHome = (props: Props) => {
   };
 
   return (
-    <GLView
-      style={{ flex: 1, height: 500, width: 500 }}
-      onContextCreate={onContextCreate}
-    />
+    <View style={{ flex: 1 }}>
+      <GLView style={{ flex: 1 }} onContextCreate={onContextCreate} />
+    </View>
   );
 };
 
