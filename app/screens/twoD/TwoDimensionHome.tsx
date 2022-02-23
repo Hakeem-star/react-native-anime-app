@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { View, Text, FlatList } from "react-native";
 import styled from "styled-components/native";
-import Page from "../components/Page";
+import Page from "../../components/Page";
 
 import {
   AnimeMediaFragment,
@@ -9,14 +9,14 @@ import {
   CoverImageFragment,
   useAnimesQuery,
   useInfiniteAnimesQuery,
-} from "../generated/graphql";
+} from "../../generated/graphql";
 import debounce from "lodash.debounce";
-import { useInfiniteGraphQLQuery } from "../util/useInfiniteGraphQLQuery";
+import { useInfiniteGraphQLQuery } from "../../util/useInfiniteGraphQLQuery";
 import { InfiniteData, useQueryClient } from "react-query";
-import { RootStackProps } from "../App";
-import AnimeResult from "../components/TwoDimension/AnimeResult";
+import { RootStackProps } from "../../App";
+import AnimeResult from "../../components/TwoDimension/AnimeResult";
 import { Gyroscope, ThreeAxisMeasurement } from "expo-sensors";
-import SearchInput from "./SearchInput";
+import SearchInput from "../SearchInput";
 
 const EmptyState = styled(View)`
   margin-top: 50px;

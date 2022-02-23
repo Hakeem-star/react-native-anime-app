@@ -9,7 +9,7 @@ const DimensionSelector = ({ navigation, route }: RootStackProps) => {
     <View style={styles.container}>
       <TouchableHighlight
         onPress={() => {
-          navigation.navigate("TwoDimensionHome", { showSearchBar: true });
+          navigation.navigate("Two Dimension Home", { showSearchBar: true });
         }}
         style={styles.twoDimension}
       >
@@ -21,7 +21,7 @@ const DimensionSelector = ({ navigation, route }: RootStackProps) => {
       <TouchableHighlight
         style={styles.threeDimension}
         onPress={() => {
-          navigation.navigate("ThreeDimensionHome");
+          navigation.navigate("Three Dimension Home");
         }}
       >
         <Text style={styles.buttonText}>3D</Text>

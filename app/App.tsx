@@ -13,7 +13,7 @@ import React from "react";
 
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
-import TwoDimensionHome from "./screens/TwoDimensionHome";
+import TwoDimensionHome from "./screens/twoD/TwoDimensionHome";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { SafeAreaView, StatusBar } from "react-native";
 import AppLoading from "expo-app-loading";
@@ -25,21 +25,21 @@ import DimensionSelector from "./screens/DimensionSelector";
 import AnimeDetails from "./screens/twoD/AnimeDetails";
 import { LogBox } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-// import ThreeDimensionHome from "./screens/threeD/ThreeDimensionHome";
+import ThreeDimensionHome from "./screens/threeD/ThreeDimensionHome";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 const queryClient = new QueryClient();
 
 export type RootStackParamList = {
-  TwoDimensionHome: { showSearchBar: boolean };
+  "Two Dimension Home": { showSearchBar: boolean };
   "Dimension Selector": undefined;
   "Anime Details": { animID: number };
-  ThreeDimensionHome: undefined;
+  "Three Dimension Home": undefined;
 };
 
 export type RootStackProps = StackScreenProps<
   RootStackParamList,
-  "TwoDimensionHome"
+  "Two Dimension Home"
 >;
 export type RootStackPropsDetails = StackScreenProps<
   RootStackParamList,
@@ -65,16 +65,21 @@ export default function App() {
           }}
         >
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="TwoDimensionHome">
+            <Stack.Navigator initialRouteName="Dimension Selector">
+              <Stack.Screen
+                name="Dimension Selector"
+                component={DimensionSelector}
+                options={{ headerShown: false }}
+              />
               <Stack.Screen
                 initialParams={{ showSearchBar: true }}
-                name="TwoDimensionHome"
+                name="Two Dimension Home"
                 component={TwoDimensionHome}
                 options={(props) => {
                   const { navigation: n, route } = props;
                   const navigation = n as StackNavigationProp<
                     RootStackParamList,
-                    "TwoDimensionHome"
+                    "Two Dimension Home"
                   >;
 
                   return {
@@ -114,6 +119,11 @@ export default function App() {
               <Stack.Screen
                 name="Anime Details"
                 component={AnimeDetails}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Three Dimension Home"
+                component={ThreeDimensionHome}
                 options={{ headerShown: false }}
               />
             </Stack.Navigator>

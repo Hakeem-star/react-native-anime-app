@@ -216,7 +216,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
         style={{ ...styles.wrapper, shadowColor: coverImageColor || "" }}
         activeOpacity={0.6}
         onPress={() => {
-          navigation.navigate("TwoDimensionHome", {
+          navigation.navigate("Two Dimension Home", {
             showSearchBar: true,
           });
         }}
@@ -228,7 +228,7 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
             color="#ffffffc7"
             style={styles.touch}
             onPress={() => {
-              navigation.navigate("TwoDimensionHome", {
+              navigation.navigate("Two Dimension Home", {
                 showSearchBar: true,
               });
             }}
