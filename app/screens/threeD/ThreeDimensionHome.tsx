@@ -2,11 +2,17 @@ import { View, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { THREE, Renderer } from "expo-three";
 import { ExpoWebGLRenderingContext, GLView } from "expo-gl";
+import { Asset } from "expo-asset";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+
 const { BoxBufferGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene } =
   THREE;
 type Props = {};
 
 const ThreeDimensionHome = (props: Props) => {
+  //   console.log({ nodes });
+
   const onContextCreate = async (gl: ExpoWebGLRenderingContext) => {
     const scene = new Scene();
     const camera = new PerspectiveCamera(
@@ -28,6 +34,39 @@ const ThreeDimensionHome = (props: Props) => {
     });
     const cube = new Mesh(geometry, material);
     scene.add(cube);
+
+    // TV
+
+    const asset = Asset.fromModule(require("../../assets/TV.gltf"));
+
+    const loader = new GLTFLoader();
+
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath("/examples/js/libs/draco/");
+    loader.setDRACOLoader(dracoLoader);
+
+    loader.load(
+      // resource URL
+      asset.uri || "",
+      // called when the resource is loaded
+      function (gltf) {
+        scene.add(gltf.scene);
+
+        gltf.animations; // Array<THREE.AnimationClip>
+        gltf.scene; // THREE.Group
+        gltf.scenes; // Array<THREE.Group>
+        gltf.cameras; // Array<THREE.Camera>
+        gltf.asset; // Object
+      },
+      // called while loading is progressing
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      },
+      // called when loading has errors
+      function (error) {
+        console.log("An error happened", error);
+      }
+    );
 
     const render = () => {
       requestAnimationFrame(render);
