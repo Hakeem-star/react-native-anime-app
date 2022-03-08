@@ -17,6 +17,13 @@ import { RootStackProps } from "../../App";
 import AnimeResult from "../../components/TwoDimension/AnimeResult";
 import { Gyroscope, ThreeAxisMeasurement } from "expo-sensors";
 import SearchInput from "../SearchInput";
+import {
+  interpolate,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
 
 const EmptyState = styled(View)`
   margin-top: 50px;
@@ -40,8 +47,6 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
     z: 0,
   });
 
-  const queryClient = useQueryClient();
-
   const _subscribe = () => {
     setSubscription(
       Gyroscope.addListener((gyroscopeData) => {
@@ -59,9 +64,9 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
   };
 
   useEffect(() => {
-    Gyroscope.setUpdateInterval(300);
+    Gyroscope.setUpdateInterval(200);
     // TODO - This is causing slowdown when there are a lot of results
-    // _subscribe();
+    _subscribe();
     return () => _unsubscribe();
   }, [setGyroData]);
 
@@ -114,6 +119,80 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
     [finalData]
   );
 
+  const prev = useSharedValue({ x: 0, y: 0, z: 0 });
+
+  const derivedTranslations = useDerivedValue(() => {
+    "worklet";
+
+    const MAX_X = 5;
+    const MAX_Y = 5;
+    const MAX_Z = 5;
+
+    // This allows a smooth transition between movements
+    let newX = prev.value.x + gyroData.x * -1;
+    let newY = prev.value.y + gyroData.y * -1;
+    let newZ = prev.value.z + gyroData.z * -1;
+
+    if (Math.abs(newX) >= MAX_X) {
+      newX = prev.value.x;
+    }
+    if (Math.abs(newY) >= MAX_Y) {
+      newY = prev.value.y;
+    }
+    if (Math.abs(newZ) >= MAX_Z) {
+      newZ = prev.value.z;
+    }
+
+    prev.value = {
+      x: newX,
+      y: newY,
+      z: newZ,
+    };
+
+    return {
+      x: newX,
+      y: newY,
+      z: newZ,
+    };
+  }, [gyroData]);
+
+  // Having one instance is more performant than multiple instances within the AnimeResult
+  const animatedStyles = useAnimatedStyle(() => {
+    const inputRange = [-1, 0, 1];
+
+    const outputRange = [-1.5, 0, 1.5];
+    return {
+      transform: [
+        { perspective: 80 },
+        { scale: 1.4 },
+        {
+          translateX: withSpring(derivedTranslations.value.x),
+        },
+        {
+          translateY: withSpring(derivedTranslations.value.y),
+        },
+        {
+          rotateX:
+            interpolate(derivedTranslations.value.x, inputRange, outputRange) +
+            "deg",
+        },
+        {
+          rotateY:
+            interpolate(derivedTranslations.value.y, inputRange, outputRange) +
+            "deg",
+        },
+        {
+          rotateZ:
+            interpolate(
+              derivedTranslations.value.z / 3,
+              inputRange,
+              outputRange
+            ) + "deg",
+        },
+      ],
+    };
+  }, [gyroData]);
+
   return (
     <Page>
       <View
@@ -162,17 +241,21 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
                     }}
                   />
                 }
-                ListFooterComponentStyle={{
-                  width: "100%",
-                  height: 3,
-                  marginTop: 5,
-                  marginBottom: 5,
-                }}
+                ListFooterComponentStyle={
+                  {
+                    // width: "100%",
+                    // height: 3,
+                    // marginTop: 5,
+                    // marginBottom: 5,
+                  }
+                }
                 columnWrapperStyle={{
-                  overflow: "hidden",
+                  overflow: "visible",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  // borderWidth: 2,
+                  // borderColor: "red",
                 }}
                 showsVerticalScrollIndicator={false}
                 style={{
@@ -192,6 +275,7 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
                       index={index}
                       anime={item}
                       rotation={gyroData}
+                      animatedStyles={animatedStyles}
                     />
                   ) : null;
                 }}

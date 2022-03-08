@@ -6,7 +6,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { ThreeAxisMeasurement } from "expo-sensors";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Animated,
   ImageBackground,
   StyleSheet,
   Text,
@@ -14,6 +13,19 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import Animated, {
+  call,
+  Easing,
+  Extrapolate,
+  interpolate,
+  measure,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 import {
   RootStackParamList,
   RootStackProps,
@@ -29,72 +41,24 @@ interface Props {
   anime: (AnimeMediaFragment & CoverImageFragment) | null;
   rotation: ThreeAxisMeasurement;
   index: number;
+  animatedStyles: any;
 }
 
 // Add tilt when scrolling up or down - TODO
+const AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
 
-const AnimeResult = ({ anime, rotation, index }: Props): JSX.Element => {
+const AnimeResult = ({
+  anime,
+  rotation,
+  index,
+  animatedStyles,
+}: Props): JSX.Element => {
+  const [randomValue, _] = useState(Math.random() * 2);
+  const [canAnimate, setCanAnimate] = useState(false);
+
   useCreateUserMutation;
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, "Anime Details">>();
-  const ref = useRef<View>(null);
-
-  const x = useRef(new Animated.Value(0)).current;
-  const y = useRef(new Animated.Value(0)).current;
-  const z = useRef(new Animated.Value(0)).current;
-
-  const prevValues = useRef({ x: 0, y: 0, z: 0 });
-
-  useEffect(() => {
-    if (ref.current)
-      ref.current?.measure((_x, _y, width, height, pageX, pageY) => {
-        if (pageY) {
-          if (prevValues.current.y !== 0 && rotation.y < 0.001) {
-            Animated.spring(x, {
-              toValue: -prevValues.current.x,
-              useNativeDriver: true,
-              stiffness: 8,
-              damping: 2,
-              mass: 0.6,
-            }).start();
-            Animated.spring(y, {
-              useNativeDriver: true,
-              toValue: -prevValues.current.y + Math.random() * 0.3,
-              // delay: Math.random() * 0.3,
-              stiffness: 8,
-              damping: 0.21,
-              mass: 0.6,
-            }).start();
-            Animated.spring(z, {
-              toValue: -prevValues.current.z,
-              useNativeDriver: true,
-              stiffness: 8,
-              damping: 2,
-              mass: 0.6,
-            }).start();
-          }
-        }
-      });
-
-    prevValues.current = rotation;
-  }, [rotation]);
-
-  const xInterpolate = x.interpolate({
-    inputRange: [-5, 0, 5],
-    outputRange: ["-10deg", "0deg", "10deg"],
-    extrapolate: "extend",
-  });
-
-  const yInterpolate = y.interpolate({
-    inputRange: [-5, 0, 5],
-    outputRange: ["-5deg", "0deg", "5deg"],
-    extrapolate: "extend",
-  });
-  const zInterpolate = z.interpolate({
-    inputRange: [-10, 0, 10],
-    outputRange: ["-5deg", "0deg", "5deg"],
-    extrapolate: "extend",
-  });
 
   return (
     <TouchableWithoutFeedback
@@ -105,23 +69,14 @@ const AnimeResult = ({ anime, rotation, index }: Props): JSX.Element => {
       }}
     >
       <Animated.View
-        ref={ref}
-        style={{
-          ...styles.container,
-          marginRight: index % 2 ? 0 : 8,
-          marginBottom: 8,
-
-          transform: [
-            { perspective: 350 },
-            { rotateX: xInterpolate },
-            { rotateY: yInterpolate },
-            { rotateZ: zInterpolate },
-          ],
-        }}
+        style={[
+          styles.container,
+          { marginRight: index % 2 ? 0 : 8, marginBottom: 8 },
+        ]}
       >
         {!!anime?.coverImage?.large && (
-          <ImageBackground
-            style={styles.container}
+          <AnimatedImage
+            style={[styles.container, animatedStyles]}
             source={{ uri: anime.coverImage?.large }}
           />
         )}
