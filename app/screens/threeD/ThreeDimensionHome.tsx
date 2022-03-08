@@ -45,7 +45,7 @@ const ThreeDimensionHome = (props: Props) => {
     // const dracoLoader = new DRACOLoader();
     // dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
     // loader.setDRACOLoader(dracoLoader);
-
+    // Issues loading custom assets. An error happened [Error: FileReader.readAsArrayBuffer is not implemented]
     loader.load(
       // resource URL
       asset.uri || "",
