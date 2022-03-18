@@ -27,6 +27,7 @@ import Description from "./Description";
 import Episodes from "./Episodes";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useCreateUserMutation } from "../../generated/server/graphql";
+import { RegularBoldText, RegularText } from "../../components/Text";
 
 const Wrapper = styled(View)`
   background-color: white;
@@ -252,7 +253,9 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
             flexDirection: "row",
           }}
         >
-          <Text>{title?.english || title?.romaji || title?.native}</Text>
+          <RegularBoldText>
+            {title?.english || title?.romaji || title?.native}
+          </RegularBoldText>
           <TouchableOpacity
             style={{ marginLeft: 15 }}
             onPress={() => {
@@ -280,6 +283,8 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
               name="Description"
               children={(props) => (
                 <Description
+                  // on scroll, scale down the image banner so the height of the navigator grows to fill the page
+                  // onScrollY={}
                   description={description}
                   totalEpisodes={episodes}
                   tags={tags}

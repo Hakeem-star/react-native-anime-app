@@ -46,6 +46,9 @@ const Description = ({
 
   return (
     <ScrollView
+      onScroll={(event) => {
+        console.log(event.nativeEvent.contentOffset.y);
+      }}
       nestedScrollEnabled={true}
       style={{ backgroundColor: "white", flex: 1, paddingVertical: 10 }}
     >

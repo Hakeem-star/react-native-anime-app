@@ -10,7 +10,7 @@ import {
 } from "@react-navigation/stack";
 
 import React from "react";
-
+import { useFonts } from "expo-font";
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import TwoDimensionHome from "./screens/twoD/TwoDimensionHome";
@@ -26,6 +26,7 @@ import AnimeDetails from "./screens/twoD/AnimeDetails";
 import { LogBox } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import ThreeDimensionHome from "./screens/threeD/ThreeDimensionHome";
+import { textStyles } from "./components/Text";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ export type RootStackPropsDetails = StackScreenProps<
 >;
 
 const Stack = createStackNavigator<RootStackParamList>();
+
 export default function App() {
   const isLoadingComplete = useCachedResources();
   // const colorScheme = useColorScheme();
@@ -113,6 +115,7 @@ export default function App() {
                     headerLeftContainerStyle: { paddingLeft: 10 },
                     headerRightContainerStyle: { paddingRight: 10 },
                     title: "Hakeems' Anime App",
+                    headerTitleStyle: { ...textStyles.bold },
                   };
                 }}
               />
