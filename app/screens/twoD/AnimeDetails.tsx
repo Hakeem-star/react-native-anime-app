@@ -51,9 +51,9 @@ const InnerWrap = styled(View)`
 `;
 
 const BackIconWrapper = styled(TouchableOpacity)`
-  position: absolute;
-  top: 10px;
-  left: 10px;
+  /* position: absolute; */
+  /* top: 10px; */
+  /* left: 10px; */
   width: 30px;
   height: 30px;
   background-color: #1b1b1bce;
@@ -61,6 +61,7 @@ const BackIconWrapper = styled(TouchableOpacity)`
   display: flex;
   align-items: center;
   justify-content: center;
+  /* margin-top: 20px; */
 `;
 
 const BackgroundImageWrapper = styled(TouchableWithoutFeedback)`
@@ -131,8 +132,9 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
 
   return (
     <Wrapper>
+      {/* Potentially replace this with a component that allows you to zoom in */}
       <Modal
-        style={{ backgroundColor: "red", display: "flex", zIndex: 10 }}
+        style={{ display: "flex", zIndex: 10 }}
         animationType="fade"
         transparent={true}
         visible={fullScreenImage}
@@ -169,28 +171,95 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
           />
         </TouchableHighlight>
       </Modal>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          width: "100%",
+          padding: 15,
+          position: "relative",
+        }}
+      >
+        <BackIconWrapper
+          style={{ ...styles.wrapper, shadowColor: coverImageColor || "" }}
+          activeOpacity={0.6}
+          onPress={() => {
+            navigation.navigate("Two Dimension Home", {
+              showSearchBar: true,
+            });
+          }}
+        >
+          <InnerWrap>
+            <Ionicons
+              name="chevron-back-sharp"
+              size={20}
+              color="#ffffffc7"
+              style={styles.touch}
+              onPress={() => {
+                navigation.navigate("Two Dimension Home", {
+                  showSearchBar: true,
+                });
+              }}
+            />
+          </InnerWrap>
+        </BackIconWrapper>
+
+        <View
+          style={{
+            // ...styles.title,
+            // display: "flex",
+            // flexDirection: "row",
+            paddingHorizontal: 10,
+            flexShrink: 1,
+          }}
+        >
+          <RegularBoldText style={{ fontSize: 24, textAlign: "center" }}>
+            {title?.english || title?.romaji || title?.native}
+          </RegularBoldText>
+        </View>
+
+        <TouchableOpacity
+          style={{
+            width: 30,
+            height: 30,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#1b1b1bce",
+            borderRadius: 5,
+          }}
+          onPress={() => {
+            setShowBanner(!showBanner);
+          }}
+        >
+          <MaterialIcons
+            name={!showBanner ? "fullscreen" : "fullscreen-exit"}
+            size={24}
+            color="white"
+          />
+        </TouchableOpacity>
+      </View>
       {!!showBanner && (
         <BackgroundImageWrapper
           onPress={() => {
             setFullScreenImage(!fullScreenImage);
           }}
           style={{
-            width: "100%",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "flex-start",
             backgroundColor: "white",
+            width: "100%",
             maxHeight: 180,
-            height: 180,
+            overflow: "hidden",
           }}
         >
           {(!!bannerImage || !!coverImage) && (
             <Animated.View
               style={{
                 backgroundColor: "white",
-                transform: [{ scale: scale }, { translateY: 30 }],
-
-                maxWidth: "100%",
               }}
             >
               <Image
@@ -213,68 +282,11 @@ const AnimeDetails = ({ navigation, route }: RootStackPropsDetails) => {
         </BackgroundImageWrapper>
       )}
 
-      <BackIconWrapper
-        style={{ ...styles.wrapper, shadowColor: coverImageColor || "" }}
-        activeOpacity={0.6}
-        onPress={() => {
-          navigation.navigate("Two Dimension Home", {
-            showSearchBar: true,
-          });
-        }}
-      >
-        <InnerWrap>
-          <Ionicons
-            name="chevron-back-sharp"
-            size={20}
-            color="#ffffffc7"
-            style={styles.touch}
-            onPress={() => {
-              navigation.navigate("Two Dimension Home", {
-                showSearchBar: true,
-              });
-            }}
-          />
-        </InnerWrap>
-      </BackIconWrapper>
-      <View
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          marginTop: 30,
-          position: "relative",
-        }}
-      >
-        <View
-          style={{
-            ...styles.title,
-            display: "flex",
-            flexDirection: "row",
-          }}
-        >
-          <RegularBoldText>
-            {title?.english || title?.romaji || title?.native}
-          </RegularBoldText>
-          <TouchableOpacity
-            style={{ marginLeft: 15 }}
-            onPress={() => {
-              setShowBanner(!showBanner);
-            }}
-          >
-            <MaterialIcons
-              name={!showBanner ? "fullscreen" : "fullscreen-exit"}
-              size={24}
-              color="black"
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
       <DetailsWrapper>
         <View
           style={{
             flex: 1,
-            marginTop: 40,
+            marginTop: 5,
             overflow: "hidden",
           }}
         >
@@ -348,7 +360,6 @@ const styles = StyleSheet.create({
     shadowRadius: 9.11,
 
     elevation: 14,
-    marginTop: 20,
   },
 });
 
