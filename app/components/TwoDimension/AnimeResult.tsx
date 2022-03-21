@@ -55,38 +55,56 @@ const AnimeResult = ({
 }: Props): JSX.Element => {
   const [randomValue, _] = useState(Math.random() * 2);
   const [canAnimate, setCanAnimate] = useState(false);
-
-  useCreateUserMutation;
+  const wrapperRef = useRef<View | null>(null);
+  // useCreateUserMutation;
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, "Anime Details">>();
+  // useEffect(() => {
+  //   setTimeout(
+  //     () =>
+  //       wrapperRef?.current?.measure((x, y, width, height, pageX, pageY) => {
+  //         if (index === 1) {
+  //           console.log({ x, y, pageX, pageY });
+  //         }
+  //       }),
+  //     0
+  //   );
+  // }, []);
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        if (anime?.id) {
-          navigation.navigate("Anime Details", { animID: anime?.id });
-        }
-      }}
+    <View
+      ref={wrapperRef}
+      // onLayout={(event) => {
+
+      // }}
     >
-      <Animated.View
-        style={[
-          styles.container,
-          { marginRight: index % 2 ? 0 : 8, marginBottom: 8 },
-        ]}
+      <TouchableWithoutFeedback
+        onPress={() => {
+          if (anime?.id) {
+            navigation.navigate("Anime Details", { animID: anime?.id });
+          }
+        }}
       >
-        {!!anime?.coverImage?.large && (
-          <AnimatedImage
-            style={[styles.container, animatedStyles]}
-            source={{ uri: anime.coverImage?.large }}
-          />
-        )}
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>
-            {anime?.title?.english || anime?.title?.romaji}
-          </Text>
-        </View>
-      </Animated.View>
-    </TouchableWithoutFeedback>
+        <Animated.View
+          style={[
+            styles.container,
+            { marginRight: index % 2 ? 0 : 8, marginBottom: 8 },
+          ]}
+        >
+          {!!anime?.coverImage?.large && (
+            <AnimatedImage
+              style={[styles.container, animatedStyles]}
+              source={{ uri: anime.coverImage?.large }}
+            />
+          )}
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>
+              {anime?.title?.english || anime?.title?.romaji}
+            </Text>
+          </View>
+        </Animated.View>
+      </TouchableWithoutFeedback>
+    </View>
   );
 };
 

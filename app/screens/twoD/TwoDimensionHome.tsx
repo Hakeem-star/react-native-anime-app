@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { View, Text, FlatList } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { View, Text, FlatList, ViewToken } from "react-native";
 import styled from "styled-components/native";
 import Page from "../../components/Page";
 
@@ -66,7 +66,7 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
   useEffect(() => {
     Gyroscope.setUpdateInterval(200);
     // TODO - This is causing slowdown when there are a lot of results
-    _subscribe();
+    // _subscribe();
     return () => _unsubscribe();
   }, [setGyroData]);
 
@@ -89,8 +89,6 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
     if (text) {
       refetch();
     } else {
-      console.log("OI");
-
       setFinalData(null);
     }
   }, [text]);
@@ -193,6 +191,13 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
     };
   }, [gyroData]);
 
+  const onViewableHandler = useCallback(
+    (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => {
+      console.log({ info });
+    },
+    []
+  );
+
   return (
     <Page>
       <View
@@ -269,6 +274,8 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
                   alignItems: "flex-start",
                 }}
                 data={result}
+                // getItemLayout
+                onViewableItemsChanged={onViewableHandler}
                 renderItem={({ index, item }) => {
                   return item ? (
                     <AnimeResult

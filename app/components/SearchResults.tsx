@@ -38,43 +38,43 @@ const SearchResults = ({ results, fetchNextPage, hasNextPage }: Props) => {
   const ref = useRef(null!);
   const ref2 = useRef(null!);
 
-  useLayoutEffect(() => {
-    // function buildThresholdList() {
-    //   let thresholds = [];
-    //   let numSteps = 10;
-    //   for (let i = 1.0; i <= numSteps; i++) {
-    //     let ratio = i / numSteps;
-    //     thresholds.push(ratio);
-    //   }
-    //   thresholds.push(0);
-    //   return thresholds;
-    // }
-    // const handleObserver: IntersectionObserverCallback = function (
-    //   entities,
-    //   observer
-    // ) {
-    //   const y = entities[0].boundingClientRect.y;
-    //   console.log({ y, entities });
-    //   fetchNextPage();
-    //   // if (state.prevY > y) {
-    //   //   const lastPhoto = state.photos[state.photos.length - 1];
-    //   //   const curPage = lastPhoto.albumId;
-    //   //   getPhotos(curPage);
-    //   //   setState({ page: curPage });
-    //   // }
-    //   // setState({ prevY: y });
-    // };
-    // const options = {
-    //   root: document.querySelector("#root"),
-    //   rootMargin: "0px",
-    //   threshold: [0.1],
-    // };
-    // const obs = new IntersectionObserver(handleObserver, options);
-    // obs.observe(ref.current);
-    // return () => {
-    //   obs.disconnect();
-    // };
-  }, []);
+  // useLayoutEffect(() => {
+  // function buildThresholdList() {
+  //   let thresholds = [];
+  //   let numSteps = 10;
+  //   for (let i = 1.0; i <= numSteps; i++) {
+  //     let ratio = i / numSteps;
+  //     thresholds.push(ratio);
+  //   }
+  //   thresholds.push(0);
+  //   return thresholds;
+  // }
+  // const handleObserver: IntersectionObserverCallback = function (
+  //   entities,
+  //   observer
+  // ) {
+  //   const y = entities[0].boundingClientRect.y;
+  //   console.log({ y, entities });
+  //   fetchNextPage();
+  //   // if (state.prevY > y) {
+  //   //   const lastPhoto = state.photos[state.photos.length - 1];
+  //   //   const curPage = lastPhoto.albumId;
+  //   //   getPhotos(curPage);
+  //   //   setState({ page: curPage });
+  //   // }
+  //   // setState({ prevY: y });
+  // };
+  // const options = {
+  //   root: document.querySelector("#root"),
+  //   rootMargin: "0px",
+  //   threshold: [0.1],
+  // };
+  // const obs = new IntersectionObserver(handleObserver, options);
+  // obs.observe(ref.current);
+  // return () => {
+  //   obs.disconnect();
+  // };
+  // }, []);
   return (
     <Wrapper ref={ref2}>
       <StyledFlatList
