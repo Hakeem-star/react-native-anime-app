@@ -39,45 +39,24 @@ import { useCreateUserMutation } from "../../generated/server/graphql";
 
 interface Props {
   anime: (AnimeMediaFragment & CoverImageFragment) | null;
-  rotation: ThreeAxisMeasurement;
   index: number;
   animatedStyles: any;
+  gryroAnimate: boolean;
 }
 
-// Add tilt when scrolling up or down - TODO
 const AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
 
 const AnimeResult = ({
   anime,
-  rotation,
   index,
   animatedStyles,
+  gryroAnimate,
 }: Props): JSX.Element => {
-  const [randomValue, _] = useState(Math.random() * 2);
-  const [canAnimate, setCanAnimate] = useState(false);
-  const wrapperRef = useRef<View | null>(null);
-  // useCreateUserMutation;
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, "Anime Details">>();
-  // useEffect(() => {
-  //   setTimeout(
-  //     () =>
-  //       wrapperRef?.current?.measure((x, y, width, height, pageX, pageY) => {
-  //         if (index === 1) {
-  //           console.log({ x, y, pageX, pageY });
-  //         }
-  //       }),
-  //     0
-  //   );
-  // }, []);
 
   return (
-    <View
-      ref={wrapperRef}
-      // onLayout={(event) => {
-
-      // }}
-    >
+    <View>
       <TouchableWithoutFeedback
         onPress={() => {
           if (anime?.id) {
@@ -93,7 +72,10 @@ const AnimeResult = ({
         >
           {!!anime?.coverImage?.large && (
             <AnimatedImage
-              style={[styles.container, animatedStyles]}
+              style={[
+                styles.container,
+                gryroAnimate ? animatedStyles : undefined,
+              ]}
               source={{ uri: anime.coverImage?.large }}
             />
           )}

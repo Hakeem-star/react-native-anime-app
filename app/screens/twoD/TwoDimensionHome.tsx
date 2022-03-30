@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { View, Text, FlatList, ViewToken } from "react-native";
 import styled from "styled-components/native";
 import Page from "../../components/Page";
@@ -66,7 +72,7 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
   useEffect(() => {
     Gyroscope.setUpdateInterval(200);
     // TODO - This is causing slowdown when there are a lot of results
-    // _subscribe();
+    _subscribe();
     return () => _unsubscribe();
   }, [setGyroData]);
 
@@ -191,13 +197,6 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
     };
   }, [gyroData]);
 
-  const onViewableHandler = useCallback(
-    (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => {
-      console.log({ info });
-    },
-    []
-  );
-
   return (
     <Page>
       <View
@@ -246,21 +245,11 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
                     }}
                   />
                 }
-                ListFooterComponentStyle={
-                  {
-                    // width: "100%",
-                    // height: 3,
-                    // marginTop: 5,
-                    // marginBottom: 5,
-                  }
-                }
                 columnWrapperStyle={{
                   overflow: "visible",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  // borderWidth: 2,
-                  // borderColor: "red",
                 }}
                 showsVerticalScrollIndicator={false}
                 style={{
@@ -274,20 +263,24 @@ const TwoDimensionHome = ({ navigation, route }: RootStackProps) => {
                   alignItems: "flex-start",
                 }}
                 data={result}
-                // getItemLayout
-                onViewableItemsChanged={onViewableHandler}
+                keyExtractor={(v) => (v?.id ? v.id + "" : "0")}
                 renderItem={({ index, item }) => {
                   return item ? (
                     <AnimeResult
+                      gryroAnimate={index < 8}
                       index={index}
                       anime={item}
-                      rotation={gyroData}
                       animatedStyles={animatedStyles}
                     />
                   ) : null;
                 }}
                 numColumns={2}
                 horizontal={false}
+                getItemLayout={(data, index) => ({
+                  length: 180,
+                  offset: 180 * index,
+                  index,
+                })}
               />
             </View>
           </>
